@@ -12,16 +12,20 @@ def index(request):
 def registerUser(request):
     submitbutton= request.POST.get("submit")
 
-    firstname=''
-    lastname=''
+    firstname = ''
+    lastname = ''
+    email = ''
+    date = ''
 
     form= ReceiptForm(request.POST or None)
     if form.is_valid():
-        firstname= form.cleaned_data.get("firstname")
-        lastname= form.cleaned_data.get("lastname")
+        firstname = form.cleaned_data.get('firstname')
+        lastname = form.cleaned_data.get('lastname')
+        email = form.cleaned_data.get('email')
+        date = form.cleaned_data.get('date')
 
 
-    context= {'form': form, 'firstname': firstname, 'lastname':lastname,
+    context= {'form': form, 'firstname': firstname, 'lastname':lastname, 'email':email, 'date':date,
               'submitbutton': submitbutton}
 
     return render(request, 'form.html', context)
