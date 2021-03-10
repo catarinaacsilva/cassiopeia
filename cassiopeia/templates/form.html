@@ -1,6 +1,7 @@
 {% block content %}
 
 {% load static %}
+{% load bootstrap %}
 
 <link rel="stylesheet" href="{% static 'jquery/dist/jquery-ui.min.css' %}" />
 <script src="{% static 'jquery/dist/jquery.js' %}"></script>
@@ -16,10 +17,12 @@
 <h1>Cassiopeia Demo</h1>
 
 
-<form action="" method="POST">
+<form method="post" role="form">
+    {{ form|bootstrap }}
     {% csrf_token %}
-    {{ form.as_p }}
-    <input type="Submit" name="submit" value="Submit"/>
-</form>
+    <div class="form-group">
+      <input type="submit" value="Submit" class="btn btn-primary" />
+    </div>
+  </form>
 
 {% endblock %}

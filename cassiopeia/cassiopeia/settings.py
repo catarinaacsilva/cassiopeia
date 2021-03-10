@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     'jquery',
     'django_static_jquery_ui',
+    'bootstrapform',
 ]
 
 MIDDLEWARE = [
