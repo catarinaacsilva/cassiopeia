@@ -7,7 +7,8 @@ class ReceiptForm(forms.Form):
     firstname = forms.CharField(max_length=100)
     lastname = forms.CharField(max_length=100)
     email = forms.EmailField(max_length=100)
-    date = forms.DateField()
+    datein = forms.DateField()
+    dateout = forms.DateField()
 
 class PolicyForm(forms.Form):
     policy = forms.CharField(max_length=1000)

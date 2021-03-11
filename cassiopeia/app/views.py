@@ -21,19 +21,21 @@ def registerUser(request):
     firstname = ''
     lastname = ''
     email = ''
-    date = ''
+    datein = ''
+    dateout = ''
     
     form= ReceiptForm(request.POST or None)
     if form.is_valid():
         firstname = form.cleaned_data.get('firstname')
         lastname = form.cleaned_data.get('lastname')
         email = form.cleaned_data.get('email')
-        date = form.cleaned_data.get('date')
+        datein = form.cleaned_data.get('datein')
+        dateout = form.cleaned_data.get('dateout')
 
-    context= {'form': form, 'firstname': firstname, 'lastname':lastname, 'email':email, 'date':date,
+    context= {'form': form, 'firstname': firstname, 'lastname':lastname, 'email':email, 'datein':datein, 'dateout':dateout,
               'submitbutton': submitbutton}
     
-    Create_User.objects.create(email, firstname, lastname, date)
+    Create_User.objects.create(email=email, firstname=firstname, lastname=lastname, datein = datein, dateout=dateout)
 
     return render(request, 'form.html', context)
 
@@ -56,7 +58,11 @@ def addPolicy(request):
     
     return render(request, 'request_consent.html', context)
 
+'''
+    Show a list with all the policies and provide a way to select one
 
+    TODO: policy is none... it is not assign the value to the variable
+'''
 def choosePolicy(request):
     submitbutton= request.POST.get("submit")
 
