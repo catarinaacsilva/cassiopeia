@@ -39,9 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bootstrap4',
-    'jquery',
-    'django_static_jquery_ui',
+    'bootstrap5',
     'bootstrapform',
 ]
 
