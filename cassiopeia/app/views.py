@@ -2,6 +2,8 @@ import logging
 from django.shortcuts import render
 from .forms import ReceiptForm
 
+from .models import Create_User
+
 logger = logging.getLogger(__name__)
 
 '''
@@ -27,5 +29,7 @@ def registerUser(request):
 
     context= {'form': form, 'firstname': firstname, 'lastname':lastname, 'email':email, 'date':date,
               'submitbutton': submitbutton}
+    
+    Create_User.objects.create(email, firstname, lastname, date)
 
     return render(request, 'form.html', context)

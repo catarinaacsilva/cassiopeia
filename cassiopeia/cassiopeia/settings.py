@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap5',
     'bootstrapform',
+    'app',
 ]
 
 MIDDLEWARE = [
@@ -77,11 +78,23 @@ WSGI_APPLICATION = 'cassiopeia.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+#}
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'cassiopeiadb',
+        'USER': 'cassiopeiadb',
+        'PASSWORD': 'cassiopeiadb',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
+
 }
 
 
