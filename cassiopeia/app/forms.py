@@ -1,5 +1,5 @@
 from django import forms
-from bootstrap_datepicker.widgets import DatePicker
+#from bootstrap_datepicker.widgets import DatePicker
 
 
 class ReceiptForm(forms.Form):
@@ -7,3 +7,6 @@ class ReceiptForm(forms.Form):
     lastname = forms.CharField(max_length=100)
     email = forms.EmailField(max_length=100)
     date = forms.DateField()
+
+class PolicyForm(forms.Form):
+    policy = forms.CharField(max_length=1000)
