@@ -1,0 +1,24 @@
+{% block content %}
+
+{% load static %}
+{% load bootstrap %}
+
+
+
+<link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+<link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
+<script src="{% static 'js/bootstrap.js' %}"></script>
+
+
+<h1>Cassiopeia Demo</h1>
+
+
+<form method="post" role="form">
+    {{ form|bootstrap }}
+    {% csrf_token %}
+    <div class="form-group">
+      <input type="submit" value="Submit" class="btn btn-primary" />
+    </div>
+  </form>
+
+{% endblock %}
