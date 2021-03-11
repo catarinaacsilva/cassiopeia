@@ -2,7 +2,7 @@ import logging
 from django.shortcuts import render
 from .forms import ReceiptForm, PolicyForm
 
-from .models import Create_User
+from .models import Create_User, Create_Policy
 
 logger = logging.getLogger(__name__)
 
@@ -51,5 +51,7 @@ def addPolicy(request):
 
     context= {'form': form, 'policy': policy,
               'submitbutton': submitbutton}
+    
+    Create_Policy.objects.create(policy=policy)
     
     return render(request, 'request_consent.html', context)
