@@ -1,6 +1,6 @@
 import logging
 from django.shortcuts import render
-from .forms import ReceiptForm, PolicyForm
+from .forms import ReceiptForm, PolicyForm, ListPolicies
 
 from .models import Create_User, Create_Policy
 
@@ -47,7 +47,7 @@ def addPolicy(request):
     
     form= PolicyForm(request.POST or None)
     if form.is_valid():
-        policy = form.cleaned_data.get('firstname')
+        policy = form.cleaned_data.get('policy')
 
     context= {'form': form, 'policy': policy,
               'submitbutton': submitbutton}
@@ -55,3 +55,20 @@ def addPolicy(request):
     Create_Policy.objects.create(policy=policy)
     
     return render(request, 'request_consent.html', context)
+
+
+def choosePolicy(request):
+    submitbutton= request.POST.get("submit")
+
+    policy = ''
+
+    form = ListPolicies(request.POST or None)
+    
+    if form.is_valid():
+        policy = form.cleaned_data.get('policy')
+    print(policy)
+
+    context= {'form': form, 'policy': policy,
+              'submitbutton': submitbutton}
+    
+    return render(request, 'listPolices.html', context)
