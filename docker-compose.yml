@@ -1,6 +1,6 @@
 version: '3'
 services:
-    postgres_receipt:
+    postgres_cassiopeia:
         restart: always
         image: postgres:13-alpine
         volumes:
