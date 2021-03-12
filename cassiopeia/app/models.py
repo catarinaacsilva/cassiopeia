@@ -15,7 +15,8 @@ class Create_Policy(models.Model):
 
 class Consent_Reply(models.Model):
     consentid = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    consent = models.CharField(max_length=10)
+    timestamp = models.DateTimeField(auto_now_add = True)
+    consent = models.BooleanField()
     email = models.ForeignKey(Create_User, on_delete=models.CASCADE)
     policyid = models.ForeignKey(Create_Policy, on_delete=models.CASCADE)
 

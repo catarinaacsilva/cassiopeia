@@ -1,5 +1,6 @@
 import json
 import logging
+import requests
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
@@ -7,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 
+from django.conf import settings
 from .models import Create_User, Create_Policy
 
 
@@ -91,12 +93,21 @@ def addDevices(request):
     
     return Response(status=status.HTTP_201_CREATED)
 
+'''
+    Request a receipt
+'''
+@csrf_exempt
+@api_view(('GET',))
+def request_receipt(request):
+    policyid = request.GET['policyid']
+    email = request.GET['email']
 
-'''
-    try:
-        emaildb = Consent_Reply.objects.get(email=email)
-        policydb = Consent_Reply.objects.get(policyid=policyid)
-    except ObjectDoesNotExist:
-        logger.erro('Object does not exist')
-        return Response('Object does not exist', status=status.HTTP_400_BAD_REQUEST)
-'''
+    r = Consent_Reply.objects.filter(policyid=policyid, email=email).order_by('timestamp')[0]
+    consent = r.consent
+
+    url = settings.RECEIPT_URL
+    x = requests.get(f'{url}/receipt?v={}&')
+    if x.status_code == 200:
+        return JsonResponse(x.text)
+    
+    return Response('Problem', status=status.HTTP_400_BAD_REQUEST)

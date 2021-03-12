@@ -134,3 +134,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join('static'),)
+
+RECEIPT_URL = 'http://127.0.0.1:8000/receipt'
