@@ -1,7 +1,11 @@
+import json
 import logging
 from django.shortcuts import render
-#from .forms import ReceiptForm, PolicyForm, ListPolicies
-from .forms import ReceiptForm, PolicyForm
+from django.core.exceptions import ObjectDoesNotExist
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.decorators import api_view
 
 from .models import Create_User, Create_Policy
 
@@ -27,32 +31,51 @@ def registerUser(request):
 
     Create_User.objects.create(email=email, firstname=firstname, lastname=lastname, datein=datein, dateout=dateout)
 
-    return
+    pass
 
 '''
-    Create policy and store it on database to reuse
+    Create policy and store it on the database to reuse
 '''
 def addPolicy(request):
     policy = request.GET['policy']
     Create_Policy.objects.create(policy=policy)
 
-    return
+    pass
 
 '''
     Give consent to an input policy and user
 '''
+@csrf_exempt
+@api_view(('POST',))
 def giveConsent(request):
-    email = request.GET['email']
-    policyid = request.GET['policyid']
-    status = request.GET['status']
+    parameters = json.loads(request.body)
+    print(parameters)
+    email = parameters['email']
+    policyid = parameters['policyid']
+    consent = parameters['consent']
+    
+    #try:
+        #Consent_Reply.objects.create(email=email, policyid=policyid, consent=consent)
+    #except:
+        #return Response('Cannot create the consent record', status=status.HTTP_400_BAD_REQUEST)
 
-    if (Consent_Reply.objects.get(email=email) != None) and (Consent_Reply.objects.get(policyid=policyid) != None):
-        Consent_Reply.objects.create(status=status)
+    return Response(status=status.HTTP_201_CREATED)
 
-    return 
 
 '''
     The method has a JSON as input (parameter). This JSON has all the devices to integrate.
 '''
 def addDevices(request):
-    
+    pass
+
+
+
+
+'''
+    try:
+        emaildb = Consent_Reply.objects.get(email=email)
+        policydb = Consent_Reply.objects.get(policyid=policyid)
+    except ObjectDoesNotExist:
+        logger.erro('Object does not exist')
+        return Response('Object does not exist', status=status.HTTP_400_BAD_REQUEST)
+'''

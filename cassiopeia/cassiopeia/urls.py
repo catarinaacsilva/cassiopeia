@@ -24,5 +24,6 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^registerUser/', views.registerUser, name='registerUser'),
     url(r'^addPolicy/', views.addPolicy, name='addPolicy'),
-    #url(r'^choosePolicy/', views.choosePolicy, name='choosePolicy'),   
+    #url(r'^choosePolicy/', views.choosePolicy, name='choosePolicy'), 
+    url(r'^giveConsent/', views.giveConsent, name='giveConsent'),
 ]
