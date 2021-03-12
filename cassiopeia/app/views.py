@@ -17,71 +17,42 @@ def index(request):
 '''
     Register temporary user in the system
 '''
+
 def registerUser(request):
-    submitbutton= request.POST.get("submit")
+    firstname = request.GET['firstname']
+    lastname = request.GET['lastname']
+    email = request.GET['email']
+    datein = request.GET['datein']
+    dateout = request.GET['dateout']
 
-    firstname = ''
-    lastname = ''
-    email = ''
-    datein = ''
-    dateout = ''
-    
-    form= ReceiptForm(request.POST or None)
-    if form.is_valid():
-        firstname = form.cleaned_data.get('firstname')
-        lastname = form.cleaned_data.get('lastname')
-        email = form.cleaned_data.get('email')
-        datein = form.cleaned_data.get('datein')
-        dateout = form.cleaned_data.get('dateout')
-
-    context= {'form': form, 'firstname': firstname, 'lastname':lastname, 'email':email, 'datein':datein, 'dateout':dateout,
-              'submitbutton': submitbutton}
-    
     Create_User.objects.create(email=email, firstname=firstname, lastname=lastname, datein=datein, dateout=dateout)
 
-    return render(request, 'form.html', context)
+    return
 
 '''
     Create policy and store it on database to reuse
 '''
-
 def addPolicy(request):
-    submitbutton= request.POST.get("submit")
-
-    policy = ''
-    
-    form= PolicyForm(request.POST or None)
-    if form.is_valid():
-        policy = form.cleaned_data.get('policy')
-
-    context= {'form': form, 'policy': policy,
-              'submitbutton': submitbutton}
-    
+    policy = request.GET['policy']
     Create_Policy.objects.create(policy=policy)
+
+    return
+
+'''
+    Give consent to an input policy and user
+'''
+def giveConsent(request):
+    email = request.GET['email']
+    policyid = request.GET['policyid']
+    status = request.GET['status']
+
+    if (Consent_Reply.objects.get(email=email) != None) and (Consent_Reply.objects.get(policyid=policyid) != None):
+        Consent_Reply.objects.create(status=status)
+
+    return 
+
+'''
+    The method has a JSON as input (parameter). This JSON has all the devices to integrate.
+'''
+def addDevices(request):
     
-    return render(request, 'request_consent.html', context)
-
-
-'''
-    Show a list with all the policies and provide a way to select one
-
-    TODO: policy is none... it is not assign the value to the variable
-'''
-'''
-def choosePolicy(request):
-    submitbutton= request.POST.get("submit")
-
-    policy = ''
-
-    form = ListPolicies(request.POST or None)
-    
-    if form.is_valid():
-        policy = form.cleaned_data.get('policy')
-    print(policy)
-
-    context= {'form': form, 'policy': policy,
-              'submitbutton': submitbutton}
-    
-    return render(request, 'listPolices.html', context)
-'''
-

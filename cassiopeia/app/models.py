@@ -12,3 +12,9 @@ class Create_User(models.Model):
 class Create_Policy(models.Model):
     policyid = models.UUIDField(primary_key=True, default=uuid.uuid4)
     policy = models.CharField(max_length=1000, null = False)
+
+class Consent_Reply(models.Model):
+    consentid = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    status = models.CharField(max_length=10)
+    email = models.ForeignKey(Create_User, on_delete=models.CASCADE)
+    policyid = models.ForeignKey(Create_Policy, on_delete=models.CASCADE)
