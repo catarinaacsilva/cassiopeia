@@ -2,7 +2,6 @@ import json
 import logging
 import requests
 from django.shortcuts import render
-from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework import status
