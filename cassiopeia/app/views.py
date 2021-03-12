@@ -21,17 +21,22 @@ def index(request):
 '''
     Register temporary user in the system
 '''
-
+@csrf_exempt
+@api_view(('POST',))
 def registerUser(request):
-    firstname = request.GET['firstname']
-    lastname = request.GET['lastname']
-    email = request.GET['email']
-    datein = request.GET['datein']
-    dateout = request.GET['dateout']
+    parameters = json.loads(request.body)
+    firstname = parameters['firstname']
+    lastname = parameters['lastname']
+    email = parameters['email']
+    datein = parameters['datein']
+    dateout = parameters['dateout']
 
-    Create_User.objects.create(email=email, firstname=firstname, lastname=lastname, datein=datein, dateout=dateout)
+    try:
+        Create_User.objects.create(email=email, firstname=firstname, lastname=lastname, datein=datein, dateout=dateout)
+    except:
+        return Response('Cannot create the user record', status=status.HTTP_400_BAD_REQUEST)
 
-    pass
+    return Response(status=status.HTTP_201_CREATED)
 
 '''
     Create policy and store it on the database to reuse
@@ -45,7 +50,7 @@ def addPolicy(request):
     try:
         Create_Policy.objects.create(policy=policy)
     except:
-        return Response('Cannot create the consent record', status=status.HTTP_400_BAD_REQUEST)
+        return Response('Cannot create the policy record', status=status.HTTP_400_BAD_REQUEST)
     
     return Response(status=status.HTTP_201_CREATED)
 
