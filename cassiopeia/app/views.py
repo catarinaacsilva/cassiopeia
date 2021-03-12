@@ -36,11 +36,18 @@ def registerUser(request):
 '''
     Create policy and store it on the database to reuse
 '''
+@csrf_exempt
+@api_view(('POST',))
 def addPolicy(request):
-    policy = request.GET['policy']
-    Create_Policy.objects.create(policy=policy)
-
-    pass
+    parameters = json.loads(request.body)
+    policy = parameters['policy']
+    
+    try:
+        Create_Policy.objects.create(policy=policy)
+    except:
+        return Response('Cannot create the consent record', status=status.HTTP_400_BAD_REQUEST)
+    
+    return Response(status=status.HTTP_201_CREATED)
 
 '''
     Give consent to an input policy and user
@@ -49,15 +56,14 @@ def addPolicy(request):
 @api_view(('POST',))
 def giveConsent(request):
     parameters = json.loads(request.body)
-    print(parameters)
     email = parameters['email']
     policyid = parameters['policyid']
     consent = parameters['consent']
     
-    #try:
-        #Consent_Reply.objects.create(email=email, policyid=policyid, consent=consent)
-    #except:
-        #return Response('Cannot create the consent record', status=status.HTTP_400_BAD_REQUEST)
+    try:
+        Consent_Reply.objects.create(email=email, policyid=policyid, consent=consent)
+    except:
+        return Response('Cannot create the consent record', status=status.HTTP_400_BAD_REQUEST)
 
     return Response(status=status.HTTP_201_CREATED)
 
