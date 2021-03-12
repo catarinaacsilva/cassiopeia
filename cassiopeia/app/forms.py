@@ -1,7 +1,7 @@
 from django import forms
 #from bootstrap_datepicker.widgets import DatePicker
 
-from .models import Create_Policy
+#from .models import Create_Policy
 
 class ReceiptForm(forms.Form):
     firstname = forms.CharField(max_length=100)
@@ -12,8 +12,9 @@ class ReceiptForm(forms.Form):
 
 class PolicyForm(forms.Form):
     policy = forms.CharField(max_length=1000)
-    name = forms.CharField(max_length=100)
 
+
+'''
 class ListPolicies(forms.Form):
     def listP():
         p = []
@@ -24,3 +25,4 @@ class ListPolicies(forms.Form):
         return p
     
     policies = forms.MultipleChoiceField(required=False, widget=forms.CheckboxSelectMultiple, choices=listP())
+'''

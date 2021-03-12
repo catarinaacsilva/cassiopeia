@@ -1,8 +1,10 @@
 import logging
 from django.shortcuts import render
-from .forms import ReceiptForm, PolicyForm, ListPolicies
+#from .forms import ReceiptForm, PolicyForm, ListPolicies
+from .forms import ReceiptForm, PolicyForm
 
 from .models import Create_User, Create_Policy
+
 
 logger = logging.getLogger(__name__)
 
@@ -35,13 +37,14 @@ def registerUser(request):
     context= {'form': form, 'firstname': firstname, 'lastname':lastname, 'email':email, 'datein':datein, 'dateout':dateout,
               'submitbutton': submitbutton}
     
-    Create_User.objects.create(email=email, firstname=firstname, lastname=lastname, datein = datein, dateout=dateout)
+    Create_User.objects.create(email=email, firstname=firstname, lastname=lastname, datein=datein, dateout=dateout)
 
     return render(request, 'form.html', context)
 
 '''
     Create policy and store it on database to reuse
 '''
+
 def addPolicy(request):
     submitbutton= request.POST.get("submit")
 
@@ -58,10 +61,12 @@ def addPolicy(request):
     
     return render(request, 'request_consent.html', context)
 
+
 '''
     Show a list with all the policies and provide a way to select one
 
     TODO: policy is none... it is not assign the value to the variable
+'''
 '''
 def choosePolicy(request):
     submitbutton= request.POST.get("submit")
@@ -78,3 +83,5 @@ def choosePolicy(request):
               'submitbutton': submitbutton}
     
     return render(request, 'listPolices.html', context)
+'''
+
