@@ -18,3 +18,9 @@ class Consent_Reply(models.Model):
     consent = models.CharField(max_length=10)
     email = models.ForeignKey(Create_User, on_delete=models.CASCADE)
     policyid = models.ForeignKey(Create_Policy, on_delete=models.CASCADE)
+
+class Device_Create(models.Model):
+    deviceid = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    device = models.CharField(max_length=100)
+    email = models.ForeignKey(Create_User, on_delete=models.CASCADE)
+    policyid = models.ForeignKey(Create_Policy, on_delete=models.CASCADE)

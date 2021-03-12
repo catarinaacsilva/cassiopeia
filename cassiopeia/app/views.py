@@ -74,12 +74,22 @@ def giveConsent(request):
 
 
 '''
-    The method has a JSON as input (parameter). This JSON has all the devices to integrate.
+    The method receives a list of devices (id or name) and store it on the database
 '''
+@csrf_exempt
+@api_view(('POST',))
 def addDevices(request):
-    pass
+    parameters = json.loads(request.body)
+    email = parameters['email']
+    policyid = parameters['policyid']
 
-
+    try:
+        for d in parameters['devices']:
+            Device_Create.objects.create(device=d, email=email, policyid=policyid)
+    except:
+        return Response('Cannot create the device record', status=status.HTTP_400_BAD_REQUEST)
+    
+    return Response(status=status.HTTP_201_CREATED)
 
 
 '''
