@@ -105,8 +105,10 @@ def request_receipt(request):
     r = Consent_Reply.objects.filter(policyid=policyid, email=email).order_by('timestamp')[0]
     consent = r.consent
 
+    version = 1
+
     url = settings.RECEIPT_URL
-    x = requests.get(f'{url}/receipt?v={}&')
+    x = requests.get(f'{url}/receipt?v={version}&')
     if x.status_code == 200:
         return JsonResponse(x.text)
     
