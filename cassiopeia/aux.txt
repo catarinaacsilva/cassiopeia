@@ -1,0 +1,1 @@
+curl -X POST -d "{\"email\":\"bana\", \"policyid\":1, \"consent\":2}" localhost:8000/giveConsent/
