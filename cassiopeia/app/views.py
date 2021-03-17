@@ -94,6 +94,7 @@ def addDevices(request):
 
 '''
     Request a receipt
+    TODO also send the signature
 '''
 @csrf_exempt
 @api_view(('GET',))
