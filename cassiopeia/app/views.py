@@ -113,3 +113,23 @@ def request_receipt(request):
         return JsonResponse(x.text)
     
     return Response('Problem', status=status.HTTP_400_BAD_REQUEST)
+
+
+'''
+    Receipt a receipt signed by the client
+
+@csrf_exempt
+@api_view(('POST', 'GET'))
+def request_sig_receipt(request):
+    parameters = json.loads(request.body)
+    receipt = parameters['receipt']
+    cert = parameters['cert']
+
+    try:
+        #validate signature and send to the receipt_generator
+        
+    except:
+        return Response('Signature not valid', status=status.HTTP_400_BAD_REQUEST)
+    
+    return Response(status=status.HTTP_201_CREATED)
+'''
