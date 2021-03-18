@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 postgres/
-env.sh
+secrets.py
