@@ -2,14 +2,12 @@ version: '3'
 services:
     postgres_cassiopeia:
         restart: always
-        image: postgres:13-alpine
+        image: lmmdock/postgres-multi:latest
         volumes:
             - postgres-storage:/var/lib/postgres
         environment:
-            #- POSTGRES_ROOT_PASSWORD=${POSTGRES_ROOT_PASSWORD}
-            - POSTGRES_DATABASE=cassiopeiadb
-            - POSTGRES_USER=${POSTGRES_USER}
-            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+            - POSTGRES_DATABASES=cassiopeiadb:${CASSIOPEIA_USER}|receiptdb:${RECEIPT_USER}|datadb:${DATA_USER}
+            - POSTGRES_USERS=${CASSIOPEIA_USER}:${CASSIOPEIA_PASSWORD}|${RECEIPT_USER}:${RECEIPT_PASSWORD}|${DATA_USER}:${DATA_PASSWORD}
         ports:
             - "5432:5432"
         restart: always
@@ -30,4 +28,3 @@ volumes:
         o: bind
         type: none
         device: ./postgres
-        
