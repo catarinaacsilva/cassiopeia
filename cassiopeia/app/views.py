@@ -59,7 +59,7 @@ def addPolicy(request):
     return Response(status=status.HTTP_201_CREATED)
 
 '''
-    Give consent to an input policy and user
+    Give consent to an input policy
 '''
 @csrf_exempt
 @api_view(('POST',))
@@ -71,6 +71,10 @@ def giveConsent(request):
     
     try:
         Consent_Reply.objects.create(email=email, policyid=policyid, consent=consent)
+        timestamp = Consent_Reply.objects.filter(policyid=policyid, email=email, consent=consent).order_by('timestamp')[0]
+        url = settings.DATA_RETENTION_CONSENT
+        policy = {'policyid':policyid, 'consent':consent, 'email':email, 'timestamp':timestamp}
+        x = requests.post(url, data=policy)
     except:
         return Response('Cannot create the consent record', status=status.HTTP_400_BAD_REQUEST)
 

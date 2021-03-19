@@ -140,3 +140,4 @@ STATICFILES_DIRS = (os.path.join('static'),)
 
 RECEIPT_URL = 'http://127.0.0.1:8000/receipt'
 DATA_RETENTION_STAY = 'http://127.0.0.1:8000/stayData'
+DATA_RETENTION_CONSENT = 'http://127.0.0.1:8000/consent'
