@@ -34,6 +34,9 @@ def registerUser(request):
 
     try:
         Create_User.objects.create(email=email, firstname=firstname, lastname=lastname, datein=datein, dateout=dateout)
+        url = settings.DATA_RETENTION_DATES
+        user = {'datein':datein, 'dateout':dateout, 'email':email}
+        x = requests.post(url, data=user)
     except:
         return Response('Cannot create the user record', status=status.HTTP_400_BAD_REQUEST)
 
