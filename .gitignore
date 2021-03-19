@@ -133,4 +133,5 @@ postgres/
 homeassistant/
 mosquitto/
 influxdb/
+telegraf/
 secrets.py
