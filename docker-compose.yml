@@ -12,15 +12,6 @@ services:
             - "5432:5432"
         restart: always
 
-    cassiopeia:
-        build: ./cassiopeia
-        volumes:
-            - ./cassiopeia:/app
-        ports:
-            - "8000:80"
-        command: bash -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:80"
-        restart: always
-    
     homeassistant:
         image: homeassistant/home-assistant:latest
         ports:
@@ -42,7 +33,32 @@ services:
             - mosquitto-conf:/mosquitto/config
         restart: always
     
-
+    cassiopeia:
+        build: ./cassiopeia
+        volumes:
+            - ./cassiopeia:/app
+        ports:
+            - "8000:80"
+        command: bash -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:80"
+        restart: always
+    
+    receipt:
+        build: ../receipt-generator/receiptGenerator
+        volumes:
+            - ../receipt-generator/receiptGenerator:/app
+        ports:
+            - "8001:81"
+        command: bash -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:81"
+        restart: always
+    
+    dataretention:
+        build: ../cassiopeia-data-retention/dataRetention
+        volumes:
+            - ../cassiopeia-data-retention/dataRetention:/app
+        ports:
+            - "8002:82"
+        command: bash -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:82"
+        restart: always
 
 volumes:
     postgres-storage:
