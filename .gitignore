@@ -132,4 +132,5 @@ env.sh
 postgres/
 homeassistant/
 mosquitto/
+influxdb/
 secrets.py
