@@ -22,8 +22,17 @@ services:
             - INFLUXDB_DB=cassiopeiainflux
             - INFLUXDB_USERNAME=${INFLUXDB_USER}
             - INFLUXDB_PASSWORD=${INFLUXDB_PASSWORD}
-           
         restart: always
+    
+    #telegraf:
+        #image: telegraf:latest
+        #ports:
+            #- '8125:8125'
+        #volumes:
+            #- telegraf:/var/lib/telegraf
+       # links:
+            #- influxdb
+        #restart: always
 
     homeassistant:
         image: homeassistant/home-assistant:latest
@@ -96,6 +105,12 @@ volumes:
             o: bind
             type: none
             device: ./influxdb
+    #telegraf:
+        #driver: local
+        #driver_opts:
+            #o: bind
+            #type: none
+            #device: ./telegraf
     homeassistant:
         driver: local
         driver_opts:
