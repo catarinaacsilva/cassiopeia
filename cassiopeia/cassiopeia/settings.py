@@ -92,7 +92,7 @@ DATABASES = {
         'NAME': 'cassiopeiadb',
         'USER': DATABASE_USERNAME,
         'PASSWORD': DATABASE_PASSWORD,
-        'HOST': 'postgres_cassiopeia',
+        'HOST': 'postgres',
         'PORT': '5432',
     }
 
