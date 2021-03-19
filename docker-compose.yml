@@ -11,6 +11,19 @@ services:
         ports:
             - "5432:5432"
         restart: always
+    
+    influxdb:
+        image: influxdb:latest
+        ports:
+            - '8086:8086'
+        volumes:
+            - influxdb-storage:/var/lib/influxdb
+        environment:
+            - INFLUXDB_DB=cassiopeiainflux
+            - INFLUXDB_USERNAME=${INFLUXDB_USER}
+            - INFLUXDB_PASSWORD=${INFLUXDB_PASSWORD}
+           
+        restart: always
 
     homeassistant:
         image: homeassistant/home-assistant:latest
@@ -77,6 +90,12 @@ volumes:
         o: bind
         type: none
         device: ./postgres
+    influxdb-storage:
+        driver: local
+        driver_opts:
+            o: bind
+            type: none
+            device: ./influxdb
     homeassistant:
         driver: local
         driver_opts:
