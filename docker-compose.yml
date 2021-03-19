@@ -33,6 +33,16 @@ services:
             - mosquitto-conf:/mosquitto/config
         restart: always
     
+    sensor_temp_hum:
+        build: ../sensors-ha/temperature_humidity
+        network_mode: host
+    sensor_co2_light:
+        build: ../sensors-ha/co2_light
+        network_mode: host
+    sensor_motion_smoke:
+        build: ../sensors-ha/motion_smoke
+        network_mode: host
+    
     cassiopeia:
         build: ./cassiopeia
         volumes:
