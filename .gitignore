@@ -130,4 +130,5 @@ dmypy.json
 
 env.sh
 postgres/
+homeassistant/
 secrets.py
