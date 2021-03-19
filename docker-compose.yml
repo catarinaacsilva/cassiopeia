@@ -77,13 +77,13 @@ services:
     receipt:
         build: ../receipt-generator/receiptGenerator
         volumes:
-            - ../receipt-generator/receiptGenerator:/app
+            - ../receiptGenerator:/app
         ports:
             - "8001:81"
         command: bash -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:81"
         restart: always
     
-    dataretention:
+    dataRetention:
         build: ../cassiopeia-data-retention/dataRetention
         volumes:
             - ../cassiopeia-data-retention/dataRetention:/app
