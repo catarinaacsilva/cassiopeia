@@ -10,16 +10,22 @@ services:
             - POSTGRES_USERS=${CASSIOPEIA_USER}:${CASSIOPEIA_PASSWORD}|${RECEIPT_USER}:${RECEIPT_PASSWORD}|${DATA_USER}:${DATA_PASSWORD}
         ports:
             - "5432:5432"
+        networks:
+            - cassiopeia
         restart: always
 
-    #cassiopeia:
-        #build: ./cassiopeia
-        #volumes:
-        #    - ./cassiopeia:/app
-        #ports:
-        #    - "8000:80"
-        #command: bash -c "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:80"
-        #restart: always
+    cassiopeia:
+        build: ./cassiopeia
+        volumes:
+            - ./cassiopeia:/app
+        ports:
+            - "8000:80"
+        networks:
+            - cassiopeia
+        depends_on:
+            - postgres_cassiopeia
+        command: bash -c "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:80"
+        restart: always
 
 volumes:
     postgres-storage:
@@ -28,3 +34,10 @@ volumes:
         o: bind
         type: none
         device: ./postgres
+
+networks:
+    cassiopeia:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 127.0.0.1/24
