@@ -71,6 +71,7 @@ def giveConsent(request):
     
     try:
         Consent_Reply.objects.create(email=email, policyid=policyid, consent=consent)
+        #verificar se esta bem
         timestamp = Consent_Reply.objects.filter(policyid=policyid, email=email, consent=consent).order_by('timestamp')[0]
         url = settings.DATA_RETENTION_CONSENT
         policy = {'policyid':policyid, 'consent':consent, 'email':email, 'timestamp':timestamp}
