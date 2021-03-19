@@ -20,7 +20,7 @@ def index(request):
     return render(request, 'index.html')
 
 '''
-    Register temporary user in the system
+    Register temporary user in the system and post data on data retention
 '''
 @csrf_exempt
 @api_view(('POST',))
@@ -34,7 +34,7 @@ def registerUser(request):
 
     try:
         Create_User.objects.create(email=email, firstname=firstname, lastname=lastname, datein=datein, dateout=dateout)
-        url = settings.DATA_RETENTION_DATES
+        url = settings.DATA_RETENTION_STAY
         user = {'datein':datein, 'dateout':dateout, 'email':email}
         x = requests.post(url, data=user)
     except:
