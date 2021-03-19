@@ -1,6 +1,6 @@
 version: '3'
 services:
-    postgres_cassiopeia:
+    postgres:
         restart: always
         image: lmmdock/postgres-multi:latest
         volumes:
