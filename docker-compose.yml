@@ -20,8 +20,8 @@ services:
             - influxdb-storage:/var/lib/influxdb
         environment:
             - INFLUXDB_DB=cassiopeiainflux
-            - INFLUXDB_USERNAME=${INFLUXDB_USER}
-            - INFLUXDB_PASSWORD=${INFLUXDB_PASSWORD}
+            - INFLUXDB_USER=${INFLUXDB_USER}
+            - INFLUXDB_USER_PASSWORD=${INFLUXDB_PASSWORD}
         restart: always
     
     #telegraf:
