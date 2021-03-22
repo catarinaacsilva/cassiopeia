@@ -19,6 +19,7 @@ services:
         volumes:
             - influxdb-storage:/var/lib/influxdb
         environment:
+            - INFLUXDB_ADMIN_USER_PASSWORD=admin
             - INFLUXDB_DB=cassiopeiainflux
             - INFLUXDB_USER=${INFLUXDB_USER}
             - INFLUXDB_USER_PASSWORD=${INFLUXDB_PASSWORD}
