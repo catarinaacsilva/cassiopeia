@@ -23,6 +23,7 @@ services:
             - INFLUXDB_DB=cassiopeiainflux
             - INFLUXDB_USER=${INFLUXDB_USER}
             - INFLUXDB_USER_PASSWORD=${INFLUXDB_PASSWORD}
+            - INFLUXDB_ADMIN_USER_TOKEN=ha
         restart: always
     
     #telegraf:
