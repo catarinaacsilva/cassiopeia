@@ -13,7 +13,7 @@ services:
         restart: always
     
     influxdb:
-        image: influxdb:latest
+        image: bitnami/influxdb:latest
         ports:
             - '8086:8086'
         volumes:
