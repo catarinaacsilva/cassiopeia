@@ -23,7 +23,7 @@ services:
             - INFLUXDB_USER_BUCKET=cassiopeiainflux
             - INFLUXDB_USER=${INFLUXDB_USER}
             - INFLUXDB_USER_PASSWORD=${INFLUXDB_PASSWORD}
-            
+            - INFLUXDB_ADMIN_USER_TOKEN=admintoken123
         restart: always
     
     #telegraf:
