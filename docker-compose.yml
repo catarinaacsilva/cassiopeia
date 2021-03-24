@@ -26,7 +26,7 @@ services:
     receipt:
         build: ../receipt-generator/receiptGenerator
         volumes:
-            - ../receiptGenerator:/app
+            - ../receipt-generator/receiptGenerator:/app
         ports:
             - "8001:81"
         depends_on:
