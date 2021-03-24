@@ -12,63 +12,53 @@ services:
             - "5432:5432"
         restart: always
     
-    influxdb:
-        image: bitnami/influxdb:latest
-        ports:
-            - '8086:8086'
-        volumes:
-            - influxdb-storage:/var/lib/influxdb
-        environment:
-            - INFLUXDB_ADMIN_USER_PASSWORD=${INFLUXDB_PASSWORD_ADMIN}
-            - INFLUXDB_USER_BUCKET=cassiopeiainflux
-            - INFLUXDB_USER=${INFLUXDB_USER}
-            - INFLUXDB_USER_PASSWORD=${INFLUXDB_PASSWORD}
-            - INFLUXDB_ADMIN_USER_TOKEN=admintoken123
-            - INFLUXDB_USER_ORG=it
-        restart: always
-    
-    #telegraf:
-        #image: telegraf:latest
-        #ports:
-            #- '8125:8125'
-        #volumes:
-            #- telegraf:/var/lib/telegraf
-       # links:
-            #- influxdb
-        #restart: always
+    #influxdb:
+    #    image: bitnami/influxdb:latest
+    #    ports:
+    #        - '8086:8086'
+    #    volumes:
+    #        - influxdb-storage:/var/lib/influxdb
+    #    environment:
+    #        - INFLUXDB_ADMIN_USER_PASSWORD=${INFLUXDB_PASSWORD_ADMIN}
+    #        - INFLUXDB_USER_BUCKET=cassiopeiainflux
+    #        - INFLUXDB_USER=${INFLUXDB_USER}
+    #        - INFLUXDB_USER_PASSWORD=${INFLUXDB_PASSWORD}
+    #        - INFLUXDB_ADMIN_USER_TOKEN=admintoken123
+    #        - INFLUXDB_USER_ORG=it
+    #    restart: always
 
-    homeassistant:
-        image: homeassistant/home-assistant:latest
-        ports:
-            - 8123:8123
-        depends_on:
-            - influxdb
-        volumes:
-            - homeassistant:/config
-            - /etc/localtime:/etc/localtime:ro
-            - /etc/timezone:/etc/timezone:ro
-        restart: always
+    #homeassistant:
+    #    image: homeassistant/home-assistant:latest
+    #    ports:
+    #        - 8123:8123
+    #    depends_on:
+    #        - influxdb
+    #    volumes:
+    #        - homeassistant:/config
+    #        - /etc/localtime:/etc/localtime:ro
+    #        - /etc/timezone:/etc/timezone:ro
+    #    restart: always
 
-    mosquitto:
-        image: eclipse-mosquitto:1.6.13
-        ports: 
-            - '1883:1883'
-            - '9001:9001'
-        volumes:
-            - mosquitto-data:/mosquitto/data
-            - mosquitto-logs:/mosquitto/logs
-            - mosquitto-conf:/mosquitto/config
-        restart: always
+    #mosquitto:
+    #    image: eclipse-mosquitto:1.6.13
+    #    ports: 
+    #        - '1883:1883'
+    #        - '9001:9001'
+    #    volumes:
+    #        - mosquitto-data:/mosquitto/data
+    #        - mosquitto-logs:/mosquitto/logs
+    #        - mosquitto-conf:/mosquitto/config
+    #    restart: always
     
-    sensor_temp_hum:
-        build: ../sensors-ha/temperature_humidity
-        network_mode: host
-    sensor_co2_light:
-        build: ../sensors-ha/co2_light
-        network_mode: host
-    sensor_motion_smoke:
-        build: ../sensors-ha/motion_smoke
-        network_mode: host
+    #sensor_temp_hum:
+    #    build: ../sensors-ha/temperature_humidity
+    #    network_mode: host
+    #sensor_co2_light:
+    #    build: ../sensors-ha/co2_light
+    #    network_mode: host
+    #sensor_motion_smoke:
+    #    build: ../sensors-ha/motion_smoke
+    #    network_mode: host
     
     cassiopeia:
         build: ./cassiopeia
@@ -110,39 +100,33 @@ volumes:
         o: bind
         type: none
         device: ./postgres
-    influxdb-storage:
-        driver: local
-        driver_opts:
-            o: bind
-            type: none
-            device: ./influxdb
-    #telegraf:
-        #driver: local
-        #driver_opts:
-            #o: bind
-            #type: none
-            #device: ./telegraf
-    homeassistant:
-        driver: local
-        driver_opts:
-            o: bind
-            type: none
-            device: ./homeassistant
-    mosquitto-data:
-        driver: local
-        driver_opts:
-            o: bind
-            type: none
-            device: ./mosquitto/mosquittodata
-    mosquitto-logs:
-        driver: local
-        driver_opts:
-            o: bind
-            type: none
-            device: ./mosquitto/mosquittologs
-    mosquitto-conf:
-        driver: local
-        driver_opts:
-            o: bind
-            type: none
-            device: ./mosquitto/mosquittoconfig
+    #influxdb-storage:
+    #    driver: local
+    #    driver_opts:
+    #        o: bind
+    #        type: none
+    #        device: ./influxdb
+    #homeassistant:
+    #    driver: local
+    #    driver_opts:
+    #        o: bind
+    #        type: none
+    #        device: ./homeassistant
+    #mosquitto-data:
+    #    driver: local
+    #    driver_opts:
+    #        o: bind
+    #        type: none
+    #        device: ./mosquitto/mosquittodata
+    #mosquitto-logs:
+    #    driver: local
+    #    driver_opts:
+    #        o: bind
+    #        type: none
+    #        device: ./mosquitto/mosquittologs
+    #mosquitto-conf:
+    #    driver: local
+    #    driver_opts:
+    #        o: bind
+    #        type: none
+    #        device: ./mosquitto/mosquittoconfig
