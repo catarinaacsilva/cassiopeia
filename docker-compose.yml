@@ -12,6 +12,39 @@ services:
             - "5432:5432"
         restart: always
     
+    cassiopeia:
+        build: ./cassiopeia
+        volumes:
+            - ./cassiopeia:/app
+        ports:
+            - "8000:80"
+        depends_on:
+            - postgres
+        command: bash -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:80"
+        restart: always
+    
+    receipt:
+        build: ../receipt-generator/receiptGenerator
+        volumes:
+            - ../receiptGenerator:/app
+        ports:
+            - "8001:81"
+        depends_on:
+            - postgres
+        command: bash -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:81"
+        restart: always
+    
+    dataretention:
+        build: ../cassiopeia-data-retention/dataRetention
+        volumes:
+            - ../cassiopeia-data-retention/dataRetention:/app
+        ports:
+            - "8002:82"
+        depends_on:
+            - postgres
+        command: bash -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:82"
+        restart: always
+    
     #influxdb:
     #    image: bitnami/influxdb:latest
     #    ports:
@@ -60,38 +93,6 @@ services:
     #    build: ../sensors-ha/motion_smoke
     #    network_mode: host
     
-    cassiopeia:
-        build: ./cassiopeia
-        volumes:
-            - ./cassiopeia:/app
-        ports:
-            - "8000:80"
-        depends_on:
-            - postgres
-        command: bash -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:80"
-        restart: always
-    
-    receipt:
-        build: ../receipt-generator/receiptGenerator
-        volumes:
-            - ../receiptGenerator:/app
-        ports:
-            - "8001:81"
-        depends_on:
-            - postgres
-        command: bash -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:81"
-        restart: always
-    
-    dataretention:
-        build: ../cassiopeia-data-retention/dataRetention
-        volumes:
-            - ../cassiopeia-data-retention/dataRetention:/app
-        ports:
-            - "8002:82"
-        depends_on:
-            - postgres
-        command: bash -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:82"
-        restart: always
 
 volumes:
     postgres-storage:
