@@ -20,7 +20,7 @@ services:
             - "8000:80"
         depends_on:
             - postgres
-        command: bash -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:80"
+        command: bash -c "sleep 5 && python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:80"
         restart: always
     
     receipt:
@@ -31,7 +31,7 @@ services:
             - "8001:81"
         depends_on:
             - postgres
-        command: bash -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:81"
+        command: bash -c "sleep 5 && python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:81"
         restart: always
     
     dataretention:
@@ -42,7 +42,7 @@ services:
             - "8002:82"
         depends_on:
             - postgres
-        command: bash -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:82"
+        command: bash -c "sleep 5 && python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:82"
         restart: always
     
     #influxdb:
