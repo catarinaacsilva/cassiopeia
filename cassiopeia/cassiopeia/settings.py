@@ -30,7 +30,7 @@ SECRET_KEY = '7-+q6hoi*66)019a*a*^%f-^yev77bi2yzwr4_rjnhjvu&=2!*'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.0.12.42']
+ALLOWED_HOSTS = ['10.0.12.42', '127.0.0.1']
 
 
 # Application definition
@@ -92,7 +92,7 @@ DATABASES = {
         'NAME': 'cassiopeiadb',
         'USER': DATABASE_USERNAME,
         'PASSWORD': DATABASE_PASSWORD,
-        'HOST': 'postgres',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 

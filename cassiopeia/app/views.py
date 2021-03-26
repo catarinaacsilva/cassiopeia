@@ -20,6 +20,13 @@ def index(request):
     return render(request, 'index.html')
 
 '''
+    Receipt management
+'''
+def receiptManagement(request):
+    return render(request, 'receiptManagement.html')
+
+
+'''
     Register temporary user in the system and post data on data retention
 '''
 @csrf_exempt
