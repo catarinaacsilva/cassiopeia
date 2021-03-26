@@ -28,5 +28,4 @@ urlpatterns = [
     #url(r'^choosePolicy/', views.choosePolicy, name='choosePolicy'), 
     url(r'^giveConsent/', views.giveConsent, name='giveConsent'),
     url(r'^addDevices/', views.addDevices, name='addDevices'),
-    
 ]
