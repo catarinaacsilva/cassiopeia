@@ -28,6 +28,9 @@ def receiptManagement(request):
 def formRegisterUser(request):
     return render(request, 'registerUser.html')
 
+def formAddPolicy(request):
+    return render(request, 'addPolicy.html')
+
 
 '''
     Register temporary user in the system and post data on data retention
