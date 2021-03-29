@@ -42,6 +42,14 @@ def formRegisterUser(request):
 def formAddPolicy(request):
     return render(request, 'addPolicy.html')
 
+'''
+    List all the policies
+'''
+def listPolicies(request):
+    
+
+
+
 ''' ##########################################################################
         API
 ##########################################################################'''
