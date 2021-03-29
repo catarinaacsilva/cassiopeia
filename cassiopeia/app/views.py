@@ -25,6 +25,9 @@ def index(request):
 def receiptManagement(request):
     return render(request, 'receiptManagement.html')
 
+def formRegisterUser(request):
+    return render(request, 'registerUser.html')
+
 
 '''
     Register temporary user in the system and post data on data retention

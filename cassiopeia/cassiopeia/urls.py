@@ -23,9 +23,10 @@ from app import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^int/receipt', views.receiptManagement, name='receiptManagement'),
-    url(r'^registerUser/', views.registerUser, name='registerUser'),
-    url(r'^addPolicy/', views.addPolicy, name='addPolicy'),
+    url(r'^int/registerUser', views.formRegisterUser, name='formRegisterUser'),
+    url(r'^register_user', views.registerUser, name='registerUser'),
+    url(r'^addPolicy', views.addPolicy, name='addPolicy'),
     #url(r'^choosePolicy/', views.choosePolicy, name='choosePolicy'), 
-    url(r'^giveConsent/', views.giveConsent, name='giveConsent'),
-    url(r'^addDevices/', views.addDevices, name='addDevices'),
+    url(r'^giveConsent', views.giveConsent, name='giveConsent'),
+    url(r'^addDevices', views.addDevices, name='addDevices'),    
 ]

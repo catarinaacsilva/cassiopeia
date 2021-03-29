@@ -12,6 +12,7 @@
 	<link href="{% static "/css/default.css"%}" rel="stylesheet">
 	<link href="{% static "/css/fonts.css"%}" rel="stylesheet">
 
+
 </head>
 
 <body>
@@ -32,19 +33,27 @@
 	<div id="banner-wrapper">
 		<div id="banner" class="container">
 			<div class="box-left">
-				<h2>Welcome to CASSIOPEIA service </h2>
-				<span>Start by register a user</span> </div>
-			<div class="box-right"> <a href="int/registerUser" class="button button-big">Register</a></div>
+				<h2>Register user</h2>
+				<form id="form" action="../register_user" method="post">{% csrf_token %}
+					<label for="firstname">First name:</label>
+					<input type="text" id="firstname" name="firstname"><br><br>
+					<label for="lastname">Last name:</label>
+					<input type="text" id="lastname" name="lastname"><br><br>
+					<label for="email">Email:</label>
+					<input type="text" id="email" name="email"><br><br>
+					<label for="datein">Date Input:</label>
+					<input type="text" id="datein" name="datein"><br><br>
+					<label for="dateout">Date Output:</label>
+					<input type="text" id="dateout" name="dateout"><br><br>
+					<input  type="submit" value="Submit">
+				  </form>
+				</div>
+		
 		</div>
 	</div>
-	<div id="wrapper">
-		<div id="page" class="container">
-			<div id="content">
-				<div class="title">
-					<h2>CASSIOPEIA service</h2>
-					<span class="byline">Control your privacy</span> </div>
-				<p>You can manage your smart environment, give consent and manage your receipts</p>
-			</div>
+	
 	</body>
+
+	<script src="{% static "/js/form.js"%}"></script>
 
 </html>

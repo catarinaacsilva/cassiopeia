@@ -30,7 +30,7 @@ SECRET_KEY = '7-+q6hoi*66)019a*a*^%f-^yev77bi2yzwr4_rjnhjvu&=2!*'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.0.12.42', '127.0.0.1']
+ALLOWED_HOSTS = ['10.0.12.42', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -137,6 +137,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join('static'),)
+
+APPEND_SLASH = False
 
 RECEIPT_URL = 'http://127.0.0.1:8000/receipt'
 DATA_RETENTION_STAY = 'http://127.0.0.1:8000/stayData'
