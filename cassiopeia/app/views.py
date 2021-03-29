@@ -13,6 +13,11 @@ from .models import Create_User, Create_Policy
 
 logger = logging.getLogger(__name__)
 
+
+''' ##########################################################################
+        INTERFACE
+##########################################################################'''
+
 '''
     Initial page just to init the demo
 '''
@@ -25,12 +30,21 @@ def index(request):
 def receiptManagement(request):
     return render(request, 'receiptManagement.html')
 
+'''
+    Render the HTML to show the form to register user
+'''
 def formRegisterUser(request):
     return render(request, 'registerUser.html')
 
+'''
+    Render the HTML to show the form to add policy
+'''
 def formAddPolicy(request):
     return render(request, 'addPolicy.html')
 
+''' ##########################################################################
+        API
+##########################################################################'''
 
 '''
     Register temporary user in the system and post data on data retention
