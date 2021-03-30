@@ -24,11 +24,6 @@ logger = logging.getLogger(__name__)
 def index(request):
     return render(request, 'index.html')
 
-'''
-    Receipt management
-'''
-def receiptManagement(request):
-    return render(request, 'receiptManagement.html')
 
 '''
     Render the HTML to show the form to register user
@@ -47,11 +42,24 @@ def formAddPolicy(request):
 '''
 def listPolicies(request):
     policies = []
+    policies_id = []
     policy_object = Create_Policy.objects.all()
     for p in policy_object:
-        policies.append(p.policy) 
-    return render(request, 'listPolicies.html', {'policies': policies})
+        policies.append(p.policy)
+        policies_id.append(p.policyid)
+    return render(request, 'listPolicies.html', {'policies': policies, 'policiesID': policies_id})
 
+'''
+    Ask for the consent and give it
+'''
+def formGiveConsent(request):
+    return render(request, 'giveConsent.html')
+
+'''
+    Request Receipt
+'''
+def requestReceipt(request):
+    return render(request, 'requestReceipt.html')
 
 
 ''' ##########################################################################

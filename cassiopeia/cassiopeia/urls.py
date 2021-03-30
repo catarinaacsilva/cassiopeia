@@ -22,10 +22,11 @@ from app import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-    url(r'^int/receipt', views.receiptManagement, name='receiptManagement'),
     url(r'^int/registerUser', views.formRegisterUser, name='formRegisterUser'),
     url(r'^int/addPolicy', views.formAddPolicy, name='formAddPolicy'),
     url(r'^int/listPolices', views.listPolicies, name='listPolicies'),
+    url(r'^int/giveConsent', views.formGiveConsent, name='formGiveConsent'),
+    url(r'^int/receipt', views.requestReceipt, name='requestReceipt'),
     
     url(r'^register_user', views.registerUser, name='registerUser'),
     url(r'^add_policy', views.addPolicy, name='addPolicy'),
