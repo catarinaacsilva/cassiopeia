@@ -46,14 +46,17 @@ def formAddPolicy(request):
     List all the policies
 '''
 def listPolicies(request):
-    
+    policies = []
+    policy_object = Create_Policy.objects.all()
+    for p in policy_object:
+        policies.append(p.policy) 
+    return render(request, 'listPolicies.html', {'policies': policies})
 
 
 
 ''' ##########################################################################
         API
-##########################################################################'''
-
+##########################################################################  '''
 '''
     Register temporary user in the system and post data on data retention
 '''

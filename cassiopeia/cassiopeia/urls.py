@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^int/receipt', views.receiptManagement, name='receiptManagement'),
     url(r'^int/registerUser', views.formRegisterUser, name='formRegisterUser'),
     url(r'^int/addPolicy', views.formAddPolicy, name='formAddPolicy'),
+    url(r'^int/listPolices', views.listPolicies, name='listPolicies'),
     
     url(r'^register_user', views.registerUser, name='registerUser'),
     url(r'^add_policy', views.addPolicy, name='addPolicy'),
