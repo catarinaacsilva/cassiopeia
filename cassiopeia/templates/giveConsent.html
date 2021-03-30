@@ -35,7 +35,7 @@
 		<div id="banner" class="container">
 			<div class="box-left">
 				<h2>Give consent</h2>
-				<form id="form" action="../register_user" method="post">{% csrf_token %}
+				<form id="form" action="../giveConsent" method="post">{% csrf_token %}
 					<label for="email">Email:</label>
 					<input type="text" id="email" name="email"><br><br>
 					<label for="policyid">PolicyID:</label>
