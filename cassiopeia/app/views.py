@@ -58,7 +58,7 @@ def formAddDevice(request):
 '''
     Render the HTML to show the receipt request
 '''
-def formAddPolicy(request):
+def formReceiptRequest(request):
     form = ReceiptForm()
     return render(request, 'requestReceipt.html', {'form': form})
 
@@ -114,11 +114,6 @@ def listUsers(request):
 def formGiveConsent(request):
     return render(request, 'giveConsent.html')
 
-'''
-    Request Receipt
-'''
-def requestReceipt(request):
-    return render(request, 'requestReceipt.html')
 
 
 ''' ##########################################################################
@@ -248,48 +243,48 @@ def addDevices(request):
     
     return Response(status=status.HTTP_201_CREATED)
 
+    
+
+'''################################################################################################################
+TESTED
+
+NOT TESTED
+################################################################################################################'''
+
+
 '''
     Request a receipt
-    TODO also send the signature
 '''
 @csrf_exempt
 @api_view(('GET',))
-def request_receipt(request):
+def requestReceipt(request):
     parameters = json.loads(request.body)
     version = parameters['version']
-    organization = parameters['organization']
+    language = parameters['language']
     selfservicepoint = parameters['selfservicepoint']
-    userid = parameters[''] 
-    privacyid = parameters['']
-    device = parameters['']
-    entities = parameters['']
-    otherinfo = parameters['']
+    consent = parameters['consent']
+    userid = parameters['userid'] 
+    privacyid = parameters['privacy']
+    devices = parameters['devices']
+    entities = parameters['entities']
+    otherinfo = parameters['otherinfo']
 
     try:
         url = settings.RECEIPTGENERATION
-        r = {'datein':datein, 'dateout':dateout, 'email':email}
+        r = {
+            'version':version, 
+            'language':language, 
+            'selfservicepoint':selfservicepoint,
+            'consent':consent,
+            'userid':userid,
+            'privacyid':privacyid,
+            'devices':devices,
+            'entities':entities,
+            'otherinfo':otherinfo}
         x = requests.post(url, data=r)
     except:
-        return Response('Cannot create the user record', status=status.HTTP_400_BAD_REQUEST)
+        return Response('Cannot request the receipt', status=status.HTTP_400_BAD_REQUEST)
 
     return Response(status=status.HTTP_201_CREATED)
 
 
-'''
-    Receipt a receipt signed by the client
-
-@csrf_exempt
-@api_view(('POST', 'GET'))
-def request_sig_receipt(request):
-    parameters = json.loads(request.body)
-    receipt = parameters['receipt']
-    cert = parameters['cert']
-
-    try:
-        #validate signature and send to the receipt_generator
-        
-    except:
-        return Response('Signature not valid', status=status.HTTP_400_BAD_REQUEST)
-    
-    return Response(status=status.HTTP_201_CREATED)
-'''

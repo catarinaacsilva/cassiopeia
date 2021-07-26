@@ -35,8 +35,9 @@ class DeviceForm(forms.Form):
 
 class ReceiptForm(forms.Form):
     version = forms.CharField(max_length=100)
-    organization = forms.CharField(max_length=100)
+    language = forms.CharField(max_length=100)
     selfservicepoint = forms.CharField(max_length=100)
+    consent = forms.CharField(max_length=100)
     userid = forms.EmailField(max_length=100)
     privacyid = forms.CharField(max_length=100) # pode ser mais do que uma...
     device = forms.CharField(max_length=100) # pode ser mais do que um...
