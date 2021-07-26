@@ -34,19 +34,11 @@
 		<div id="banner" class="container">
 			<div class="box-left">
 				<h2>Register user</h2>
-				<form id="form" action="../register_user" method="post">{% csrf_token %}
-					<label for="firstname">First name:</label>
-					<input type="text" id="firstname" name="firstname"><br><br>
-					<label for="lastname">Last name:</label>
-					<input type="text" id="lastname" name="lastname"><br><br>
-					<label for="email">Email:</label>
-					<input type="text" id="email" name="email"><br><br>
-					<label for="datein">Date Input:</label>
-					<input type="text" id="datein" name="datein"><br><br>
-					<label for="dateout">Date Output:</label>
-					<input type="text" id="dateout" name="dateout"><br><br>
-					<input  type="submit" value="Submit">
-				  </form>
+				<form action="../adduser" method="post">
+					{% csrf_token %}
+					{{ form }}
+					<input type="submit" value="Submit">
+				</form>
 				</div>
 		
 		</div>

@@ -34,12 +34,11 @@
 		<div id="banner" class="container">
 			<div class="box-left">
 				<h2>Add policy</h2>
-				<form id="form" action="../add_policy" method="post">{% csrf_token %}
-					<label for="policy">Policy:</label>
-					<input type="text" id="policy" name="policy"><br><br>
-					
-					<input  type="submit" value="Submit">
-				  </form>
+				<form action="../addpolicy" method="post">
+					{% csrf_token %}
+					{{ form }}
+					<input type="submit" value="Submit">
+				</form>
 				</div>
 		
 		</div>
@@ -48,5 +47,4 @@
 	</body>
 
 	<script src="{% static "/js/form.js"%}"></script>
-
 </html>

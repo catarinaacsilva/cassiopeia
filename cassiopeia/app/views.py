@@ -8,7 +8,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 
 from django.conf import settings
-from .models import Create_User, Create_Policy
+from .models import User, Policy, Device, Stay
+from .forms import PolicyForm, DeviceForm, UserForm, StayForm, ReceiptForm
 
 
 logger = logging.getLogger(__name__)
@@ -29,25 +30,83 @@ def index(request):
     Render the HTML to show the form to register user
 '''
 def formRegisterUser(request):
-    return render(request, 'registerUser.html')
+    form = UserForm()
+    return render(request, 'registerUser.html', {'form': form})
+
+'''
+    Render the HTML to show the form to register stay
+'''
+def formRegisterStay(request):
+    form = StayForm()
+    return render(request, 'registerStay.html', {'form': form})
 
 '''
     Render the HTML to show the form to add policy
 '''
 def formAddPolicy(request):
-    return render(request, 'addPolicy.html')
+    form = PolicyForm()
+    return render(request, 'addPolicy.html', {'form': form})
+
 
 '''
-    List all the policies
+    Render the HTML to show the form to add device
+'''
+def formAddDevice(request):
+    form = DeviceForm()
+    return render(request, 'addDevice.html', {'form': form})
+
+'''
+    Render the HTML to show the receipt request
+'''
+def formAddPolicy(request):
+    form = ReceiptForm()
+    return render(request, 'requestReceipt.html', {'form': form})
+
+
+'''
+    List all policies
 '''
 def listPolicies(request):
     policies = []
-    policies_id = []
-    policy_object = Create_Policy.objects.all()
+    
+    policy_object = Policy.objects.all()
     for p in policy_object:
-        policies.append(p.policy)
-        policies_id.append(p.policyid)
-    return render(request, 'listPolicies.html', {'policies': policies, 'policiesID': policies_id})
+        di = {'id': p.policyid, 'policy': p.policy}
+
+        policies.append(di)
+        
+    return render(request, 'listPolicies.html', {'Policies': policies})
+
+
+'''
+    List all devices
+'''
+def listDevices(request):
+    devices = []
+    
+    device_object = Device.objects.all()
+    for d in device_object:
+        di = {'id': d.deviceid, 'name': d.device, 'policy': d.policyid}
+
+        devices.append(di)
+        
+    return render(request, 'listDevices.html', {'Devices': devices})
+
+
+'''
+    List all users
+'''
+def listUsers(request):
+    users = []
+    
+    user_object = User.objects.all()
+    for u in user_object:
+        di = {'email': u.email, 'FirstName': u.firstname, 'LastName': u.lastname}
+
+        users.append(di)
+        
+    return render(request, 'listUsers.html', {'Users': users})
+
 
 '''
     Ask for the consent and give it
@@ -75,18 +134,38 @@ def registerUser(request):
     firstname = parameters['firstname']
     lastname = parameters['lastname']
     email = parameters['email']
-    datein = parameters['datein']
-    dateout = parameters['dateout']
+    #datein = parameters['datein']
+    #dateout = parameters['dateout']
 
     try:
-        Create_User.objects.create(email=email, firstname=firstname, lastname=lastname, datein=datein, dateout=dateout)
-        url = settings.DATA_RETENTION_STAY
-        user = {'datein':datein, 'dateout':dateout, 'email':email}
-        x = requests.post(url, data=user)
+        User.objects.create(email=email, firstname=firstname, lastname=lastname)
+        #url = settings.DATA_RETENTION_STAY
+        #user = {'datein':datein, 'dateout':dateout, 'email':email}
+        #x = requests.post(url, data=user)
     except:
         return Response('Cannot create the user record', status=status.HTTP_400_BAD_REQUEST)
 
     return Response(status=status.HTTP_201_CREATED)
+
+
+@csrf_exempt
+@api_view(('POST',))
+def registerStay(request):
+    parameters = json.loads(request.body)
+    datein = parameters['datein']
+    dateout = parameters['dateout']
+
+    try:
+        Stay.objects.create(datein=datein, dateout=dateout)
+        #url = settings.DATA_RETENTION_STAY
+        #user = {'datein':datein, 'dateout':dateout, 'email':email}
+        #x = requests.post(url, data=user)
+    except Exception as e:
+        print(e)
+        return Response('Cannot create the user record', status=status.HTTP_400_BAD_REQUEST)
+
+    return Response(status=status.HTTP_201_CREATED)
+
 
 '''
     Create policy and store it on the database to reuse
@@ -98,15 +177,38 @@ def addPolicy(request):
     policy = parameters['policy']
     
     try:
-        Create_Policy.objects.create(policy=policy)
+        Policy.objects.create(policy=policy)
     except:
         return Response('Cannot create the policy record', status=status.HTTP_400_BAD_REQUEST)
     
     return Response(status=status.HTTP_201_CREATED)
 
+
+'''
+    Add the available devices
+'''
+@csrf_exempt
+@api_view(('POST',))
+def addDevice(request):
+    print(f'Add Device into DB')
+    parameters = json.loads(request.body)
+    print(parameters)
+    device = parameters['device']
+    policyid = parameters['policyid']
+    
+    try:
+        policy = Policy.objects.get(policyid=policyid)
+        Device.objects.create(device=device, policyid=policy)
+    except Exception as e:
+        print(e)
+        return Response('Cannot create the device record', status=status.HTTP_400_BAD_REQUEST)
+    
+    return Response(status=status.HTTP_201_CREATED)
+
+
 '''
     Give consent to an input policy
-'''
+
 @csrf_exempt
 @api_view(('POST',))
 def giveConsent(request):
@@ -116,9 +218,9 @@ def giveConsent(request):
     consent = parameters['consent']
     
     try:
-        Consent_Reply.objects.create(email=email, policyid=policyid, consent=consent)
+        Consent.objects.create(email=email, policyid=policyid, consent=consent)
         #verificar se esta bem
-        timestamp = Consent_Reply.objects.filter(policyid=policyid, email=email, consent=consent).order_by('timestamp')[0]
+        timestamp = Consent.objects.filter(policyid=policyid, email=email, consent=consent).order_by('timestamp')[0]
         url = settings.DATA_RETENTION_CONSENT
         policy = {'policyid':policyid, 'consent':consent, 'email':email, 'timestamp':timestamp}
         x = requests.post(url, data=policy)
@@ -126,7 +228,7 @@ def giveConsent(request):
         return Response('Cannot create the consent record', status=status.HTTP_400_BAD_REQUEST)
 
     return Response(status=status.HTTP_201_CREATED)
-
+'''
 
 '''
     The method receives a list of devices (id or name) and store it on the database
@@ -153,20 +255,24 @@ def addDevices(request):
 @csrf_exempt
 @api_view(('GET',))
 def request_receipt(request):
-    policyid = request.GET['policyid']
-    email = request.GET['email']
+    parameters = json.loads(request.body)
+    version = parameters['version']
+    organization = parameters['organization']
+    selfservicepoint = parameters['selfservicepoint']
+    userid = parameters[''] 
+    privacyid = parameters['']
+    device = parameters['']
+    entities = parameters['']
+    otherinfo = parameters['']
 
-    r = Consent_Reply.objects.filter(policyid=policyid, email=email).order_by('timestamp')[0]
-    consent = r.consent
+    try:
+        url = settings.RECEIPTGENERATION
+        r = {'datein':datein, 'dateout':dateout, 'email':email}
+        x = requests.post(url, data=r)
+    except:
+        return Response('Cannot create the user record', status=status.HTTP_400_BAD_REQUEST)
 
-    version = 1
-
-    url = settings.RECEIPT_URL
-    x = requests.get(f'{url}/receipt?v={version}&')
-    if x.status_code == 200:
-        return JsonResponse(x.text)
-    
-    return Response('Problem', status=status.HTTP_400_BAD_REQUEST)
+    return Response(status=status.HTTP_201_CREATED)
 
 
 '''

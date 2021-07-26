@@ -35,17 +35,11 @@
 			{% block content %}
 			<div class="box-left">
 				
-				{% for policy in policies %}
+				{% for policy in Policies %}
 				<li>{{policy}}</li>
 				{%endfor%}
 				
 				</div>
-			<div class="box-right">
-					
-					{% for idp in policiesID %}
-					<li> {{idp}}</li>
-					{%endfor%}
-			</div>
 			{% endblock %}
 		</div>
 		 

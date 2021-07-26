@@ -34,15 +34,12 @@
 	<div id="banner-wrapper">
 		<div id="banner" class="container">
 			<div class="box-left">
-				<h2>Give consent</h2>
-				<form id="form" action="../request_receipt" method="post">{% csrf_token %}
-					<label for="email">Email:</label>
-					<input type="text" id="email" name="email"><br><br>
-					<label for="policyid">PolicyID:</label>
-					<input type="text" id="policyid" name="policyid"><br><br>
-					
-					<input  type="submit" value="Submit">
-				  </form>
+				<h2>Request Receipt</h2>
+				<form action="../requestreceipt" method="post">
+					{% csrf_token %}
+					{{ form }}
+					<input type="submit" value="Submit">
+				</form>
 			</div>
 		
 		</div>
