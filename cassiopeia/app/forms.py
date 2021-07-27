@@ -16,7 +16,7 @@ class StayForm(forms.Form):
         # dynamic fields here ...
         qs = Device.objects.all()
         for r in qs:
-            self.fields[f'device_{r.deviceid}'] = forms.ChoiceField(choices = (('Consent', True),('No consent', False)))
+            self.fields[f'device_{r.deviceid}'] = forms.ChoiceField(choices = (('Consent', True),('No consent', False)), label=r.device)
     # normal fields here ...
     email = forms.ModelChoiceField(queryset=User.objects.all(), to_field_name="email", empty_label=None)
     datein = forms.DateField()
@@ -33,16 +33,9 @@ class DeviceForm(forms.Form):
     
     #forms.CharField(max_length=100)
 
-class ReceiptForm(forms.Form):
-    version = forms.CharField(max_length=100)
-    language = forms.CharField(max_length=100)
-    selfservicepoint = forms.CharField(max_length=100)
-    consent = forms.CharField(max_length=100)
-    userid = forms.EmailField(max_length=100)
-    privacyid = forms.CharField(max_length=100) # pode ser mais do que uma...
-    device = forms.CharField(max_length=100) # pode ser mais do que um...
-    entities = forms.CharField(max_length=100) # pode ser mais do que uma...
-    otherinfo = forms.CharField(max_length=100)
+class EntityForm(forms.Form):
+    entity = forms.CharField(max_length=100)
+    policyid = forms.ModelChoiceField(queryset=Policy.objects.all(), to_field_name="policyid", empty_label=None)
 
 
 '''

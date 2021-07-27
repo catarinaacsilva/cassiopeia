@@ -8,8 +8,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 
 from django.conf import settings
-from .models import User, Policy, Device, Stay
-from .forms import PolicyForm, DeviceForm, UserForm, StayForm, ReceiptForm
+from .models import User, Policy, Device, Stay, Entity
+from .forms import PolicyForm, DeviceForm, UserForm, StayForm, EntityForm 
 
 
 logger = logging.getLogger(__name__)
@@ -55,6 +55,15 @@ def formAddDevice(request):
     form = DeviceForm()
     return render(request, 'addDevice.html', {'form': form})
 
+
+'''
+    Render the HTML to show the form to add entity
+'''
+def formAddEntity(request):
+    form = EntityForm()
+    return render(request, 'addEntity.html', {'form': form})
+
+
 '''
     Render the HTML to show the receipt request
 '''
@@ -91,6 +100,22 @@ def listDevices(request):
         devices.append(di)
         
     return render(request, 'listDevices.html', {'Devices': devices})
+
+
+
+'''
+    List all entity
+'''
+def listEntities(request):
+    entities = []
+    
+    entity_object = Entity.objects.all()
+    for d in entity_object:
+        di = {'id': d.entityid, 'name': d.entity, 'policy': d.policyid}
+
+        entities.append(di)
+        
+    return render(request, 'listEntities.html', {'Entities': entities})
 
 
 '''
@@ -149,9 +174,20 @@ def registerStay(request):
     parameters = json.loads(request.body)
     datein = parameters['datein']
     dateout = parameters['dateout']
+    email = parameters['email']
+    device_pk = [x[7:] for x in parameters.keys() if x.startswith('device_')]
+    print(parameters)
+    print(device_pk)
 
     try:
-        Stay.objects.create(datein=datein, dateout=dateout)
+
+        #Create stay info in db
+        user = User.objects.get(email=email)
+        stay = Stay.objects.create(datein=datein, dateout=dateout, email=user)
+        for pk in device_pk:
+            device = Device.objects.get(deviceid = pk)
+            consent = parameters[f'device_{pk}']
+            Consent.objects.create(stayid=stay, deviceid=device, consent=consent)
         #url = settings.DATA_RETENTION_STAY
         #user = {'datein':datein, 'dateout':dateout, 'email':email}
         #x = requests.post(url, data=user)
@@ -201,6 +237,29 @@ def addDevice(request):
     return Response(status=status.HTTP_201_CREATED)
 
 
+
+'''
+    Add the available entities
+'''
+@csrf_exempt
+@api_view(('POST',))
+def addEntity(request):
+    print(f'Add Entity into DB')
+    parameters = json.loads(request.body)
+    print(parameters)
+    entity = parameters['entity']
+    policyid = parameters['policyid']
+    
+    try:
+        policy = Policy.objects.get(policyid=policyid)
+        Entity.objects.create(entity=entity, policyid=policy)
+    except Exception as e:
+        print(e)
+        return Response('Cannot create the entity record', status=status.HTTP_400_BAD_REQUEST)
+    
+    return Response(status=status.HTTP_201_CREATED)
+
+
 '''
     Give consent to an input policy
 
@@ -225,23 +284,6 @@ def giveConsent(request):
     return Response(status=status.HTTP_201_CREATED)
 '''
 
-'''
-    The method receives a list of devices (id or name) and store it on the database
-'''
-@csrf_exempt
-@api_view(('POST',))
-def addDevices(request):
-    parameters = json.loads(request.body)
-    email = parameters['email']
-    policyid = parameters['policyid']
-
-    try:
-        for d in parameters['devices']:
-            Device_Create.objects.create(device=d, email=email, policyid=policyid)
-    except:
-        return Response('Cannot create the device record', status=status.HTTP_400_BAD_REQUEST)
-    
-    return Response(status=status.HTTP_201_CREATED)
 
     
 
@@ -259,15 +301,13 @@ NOT TESTED
 @api_view(('GET',))
 def requestReceipt(request):
     parameters = json.loads(request.body)
-    version = parameters['version']
-    language = parameters['language']
-    selfservicepoint = parameters['selfservicepoint']
-    consent = parameters['consent']
-    userid = parameters['userid'] 
-    privacyid = parameters['privacy']
-    devices = parameters['devices']
-    entities = parameters['entities']
-    otherinfo = parameters['otherinfo']
+    version = '1.0'
+    language = 'EN'
+    selfservicepoint = 'cassiopeia.id'
+    userid = email
+    devices = []
+    entities = []
+    otherinfo = ''
 
     try:
         url = settings.RECEIPTGENERATION
@@ -281,7 +321,7 @@ def requestReceipt(request):
             'devices':devices,
             'entities':entities,
             'otherinfo':otherinfo}
-        x = requests.post(url, data=r)
+        x = requests.get(url, data=r)
     except:
         return Response('Cannot request the receipt', status=status.HTTP_400_BAD_REQUEST)
 
