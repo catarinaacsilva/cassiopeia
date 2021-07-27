@@ -7,9 +7,9 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>Cassiopeia</title>
+	<title>Privacy Management</title>
 	<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800" rel="stylesheet" />
-	<link href="{% static "/css/default.css"%}" rel="stylesheet">
+	<link href="{% static "/css/defaulttest.css"%}" rel="stylesheet">
 	<link href="{% static "/css/fonts.css"%}" rel="stylesheet">
 
 
@@ -19,13 +19,10 @@
 	<div id="header-wrapper">
 		<div id="header" class="container">
 			<div id="logo">
-				<h1><a href="/">CASSIOPEIA</a></h1>
+				<h1><a href="/">Privacy Management</a></h1>
 			</div>
 			<div id="menu">
-				<ul>
-					<li class="current_page_item"><a href="/" title="">Services</a></li>
-					
-				</ul>
+				
 			</div>
 		</div>
 	</div>
@@ -33,21 +30,22 @@
 	<div id="banner-wrapper">
 		<div id="banner" class="container">
 			{% block content %}
-			<div class="box-left">
-				
-				{% for user in Users %}
-				<li>{{ user }}</li>
-				{%endfor%}
-				
-				</div>
-			
+			{% for user in Users %}
+				<p><b>Email:</b> {{ user.email }}</p>
+				<p><b>First Name:</b> {{ user.FirstName }}</p>
+				<p><b>Last Name:</b> {{ user.LastName }}</p>
+  			{%endfor%}
 			{% endblock %}
 		</div>
 		 
 	</div>
+
+
 	
 	</body>
 
 	<script src="{% static "/js/form.js"%}"></script>
 
 </html>
+
+

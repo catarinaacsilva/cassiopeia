@@ -287,29 +287,6 @@ def addEntity(request):
     return Response(status=status.HTTP_201_CREATED)
 
 
-'''
-    Give consent to an input policy
-
-@csrf_exempt
-@api_view(('POST',))
-def giveConsent(request):
-    parameters = json.loads(request.body)
-    email = parameters['email']
-    policyid = parameters['policyid']
-    consent = parameters['consent']
-    
-    try:
-        Consent.objects.create(email=email, policyid=policyid, consent=consent)
-        #verificar se esta bem
-        timestamp = Consent.objects.filter(policyid=policyid, email=email, consent=consent).order_by('timestamp')[0]
-        url = settings.DATA_RETENTION_CONSENT
-        policy = {'policyid':policyid, 'consent':consent, 'email':email, 'timestamp':timestamp}
-        x = requests.post(url, data=policy)
-    except:
-        return Response('Cannot create the consent record', status=status.HTTP_400_BAD_REQUEST)
-
-    return Response(status=status.HTTP_201_CREATED)
-'''
 
 
     
