@@ -16,11 +16,11 @@ class StayForm(forms.Form):
         # dynamic fields here ...
         qs = Device.objects.all()
         for r in qs:
-            self.fields[f'device_{r.deviceid}'] = forms.ChoiceField(choices = (('Consent', True),('No consent', False)), label=r.device)
+            self.fields[f'device_{r.deviceid}'] = forms.ChoiceField(choices = ((True, 'Consent'),(False, 'No Consent')), label=r.device)
 
         qe = Entity.objects.all()
         for r in qe:
-            self.fields[f'entity_{r.entityid}'] = forms.ChoiceField(choices = (('Consent', True),('No consent', False)), label=r.entity)
+            self.fields[f'entity_{r.entityid}'] = forms.ChoiceField(choices = ((True, 'Consent'),(False, 'No Consent')), label=r.entity)
     
     # normal fields here ...
     email = forms.ModelChoiceField(queryset=User.objects.all(), to_field_name="email", empty_label=None)

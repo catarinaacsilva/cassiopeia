@@ -172,6 +172,7 @@ def registerUser(request):
 @api_view(('POST',))
 def registerStay(request):
     parameters = json.loads(request.body)
+    print(parameters)
     datein = parameters['datein']
     dateout = parameters['dateout']
     email = parameters['email']
@@ -193,30 +194,32 @@ def registerStay(request):
         stay = Stay.objects.create(datein=datein, dateout=dateout, email=user)
         for pk in device_pk:
             device = Device.objects.get(deviceid = pk)
-            consent_d = parameters[f'device_{pk}']
+            consent_d = parameters[f'device_{pk}'] == 'True'
             Consent_Device.objects.create(stayid=stay, deviceid=device, consent=consent_d)
         
         for pk in entity_pk:
             entity = Entity.objects.get(entityid = pk)
-            consent_e = parameters[f'entity_{pk}']
-            Consent_Device.objects.create(stayid=stay, entityid=device, consent=consent_e)
-        
-        #url = settings.DATA_RETENTION_STAY
-        #user = {'datein':datein, 'dateout':dateout, 'email':email}
-        #x = requests.post(url, data=user)
+            consent_e = parameters[f'entity_{pk}'] == 'True'
+            Consent_Entity.objects.create(stayid=stay, entityid=entity, consent=consent_e)
+    
 
         url = settings.RECEIPTGENERATION
         r = {
             'version':version, 
             'language':language, 
             'selfservicepoint':selfservicepoint,
-            'consent':consent,
             'userid':userid,
             'privacyid':privacyid,
             'devices':devices,
             'entities':entities,
             'otherinfo':otherinfo}
-        #x = requests.get(url, data=r)
+        x = requests.get(url, data=r)
+
+        print(x)
+
+        #url = settings.DATA_RETENTION_STAY
+        #user = {'datein':datein, 'dateout':dateout, 'email':email}
+        #x = requests.post(url, data=user)
 
     except Exception as e:
         print(e)
