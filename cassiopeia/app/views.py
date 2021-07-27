@@ -8,7 +8,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 
 from django.conf import settings
-from .models import User, Policy, Device, Stay, Entity
+from .models import User, Policy, Device, Stay, Entity, Consent_Entity, Consent_Device
 from .forms import PolicyForm, DeviceForm, UserForm, StayForm, EntityForm 
 
 
@@ -176,24 +176,51 @@ def registerStay(request):
     dateout = parameters['dateout']
     email = parameters['email']
     device_pk = [x[7:] for x in parameters.keys() if x.startswith('device_')]
-    print(parameters)
-    print(device_pk)
+    entity_pk = [x[7:] for x in parameters.keys() if x.startswith('entity_')]
+
+
+    version = '1.0'
+    language = 'EN'
+    selfservicepoint = 'cassiopeia.id'
+    userid = email
+    devices = []
+    entities = []
+    otherinfo = ''
 
     try:
-
         #Create stay info in db
         user = User.objects.get(email=email)
         stay = Stay.objects.create(datein=datein, dateout=dateout, email=user)
         for pk in device_pk:
             device = Device.objects.get(deviceid = pk)
-            consent = parameters[f'device_{pk}']
-            Consent.objects.create(stayid=stay, deviceid=device, consent=consent)
+            consent_d = parameters[f'device_{pk}']
+            Consent_Device.objects.create(stayid=stay, deviceid=device, consent=consent_d)
+        
+        for pk in entity_pk:
+            entity = Entity.objects.get(entityid = pk)
+            consent_e = parameters[f'entity_{pk}']
+            Consent_Device.objects.create(stayid=stay, entityid=device, consent=consent_e)
+        
         #url = settings.DATA_RETENTION_STAY
         #user = {'datein':datein, 'dateout':dateout, 'email':email}
         #x = requests.post(url, data=user)
+
+        url = settings.RECEIPTGENERATION
+        r = {
+            'version':version, 
+            'language':language, 
+            'selfservicepoint':selfservicepoint,
+            'consent':consent,
+            'userid':userid,
+            'privacyid':privacyid,
+            'devices':devices,
+            'entities':entities,
+            'otherinfo':otherinfo}
+        #x = requests.get(url, data=r)
+
     except Exception as e:
         print(e)
-        return Response('Cannot create the user record', status=status.HTTP_400_BAD_REQUEST)
+        return Response('Cannot create the stay record', status=status.HTTP_400_BAD_REQUEST)
 
     return Response(status=status.HTTP_201_CREATED)
 
@@ -287,44 +314,10 @@ def giveConsent(request):
 
     
 
-'''################################################################################################################
-TESTED
-
-NOT TESTED
-################################################################################################################'''
 
 
-'''
-    Request a receipt
-'''
-@csrf_exempt
-@api_view(('GET',))
-def requestReceipt(request):
-    parameters = json.loads(request.body)
-    version = '1.0'
-    language = 'EN'
-    selfservicepoint = 'cassiopeia.id'
-    userid = email
-    devices = []
-    entities = []
-    otherinfo = ''
 
-    try:
-        url = settings.RECEIPTGENERATION
-        r = {
-            'version':version, 
-            'language':language, 
-            'selfservicepoint':selfservicepoint,
-            'consent':consent,
-            'userid':userid,
-            'privacyid':privacyid,
-            'devices':devices,
-            'entities':entities,
-            'otherinfo':otherinfo}
-        x = requests.get(url, data=r)
-    except:
-        return Response('Cannot request the receipt', status=status.HTTP_400_BAD_REQUEST)
 
-    return Response(status=status.HTTP_201_CREATED)
+
 
 

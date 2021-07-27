@@ -32,7 +32,6 @@ urlpatterns = [
     url(r'^int/listEntities', views.listEntities, name='listEntities'),
     url(r'^int/listUsers', views.listUsers, name='listUsers'),
     #url(r'^int/giveConsent', views.formGiveConsent, name='formGiveConsent'),
-    url(r'^int/receipt', views.requestReceipt, name='requestReceipt'),
     
     url(r'^register_user', views.registerUser, name='registerUser'),
     url(r'^adddevice', views.addDevice, name='addDevice'),
@@ -40,7 +39,6 @@ urlpatterns = [
     url(r'^addpolicy', views.addPolicy, name='addPolicy'),
     url(r'^adduser', views.registerUser, name='registerUser'),
     url(r'^addstay', views.registerStay, name='registerStay'),
-    url(r'^requestreceipt', views.requestReceipt, name='requestreceipt'),
     #url(r'^choosePolicy/', views.choosePolicy, name='choosePolicy'), 
     #url(r'^giveConsent', views.giveConsent, name='giveConsent'),
     #url(r'^addDevices', views.addDevices, name='addDevices'),    

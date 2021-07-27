@@ -33,11 +33,19 @@ class Entity(models.Model):
     policyid = models.ForeignKey(Policy, on_delete=models.CASCADE)
 
 
-class Consent(models.Model):
+class Consent_Device(models.Model):
     consentid = models.AutoField(primary_key=True)
     timestamp = models.DateTimeField(auto_now_add = True)
     consent = models.BooleanField()
     deviceid = models.ForeignKey(Device, on_delete=models.CASCADE)
+    stayid = models.ForeignKey(Stay, on_delete=models.CASCADE)
+
+
+class Consent_Entity(models.Model):
+    consentid = models.AutoField(primary_key=True)
+    timestamp = models.DateTimeField(auto_now_add = True)
+    consent = models.BooleanField()
+    entityid = models.ForeignKey(Entity, on_delete=models.CASCADE)
     stayid = models.ForeignKey(Stay, on_delete=models.CASCADE)
 
 class Receipt(models.Model):

@@ -1,7 +1,7 @@
 from django import forms
 #from bootstrap_datepicker.widgets import DatePicker
 
-from .models import Policy, Device, User
+from .models import Policy, Device, User, Entity
 
 class UserForm(forms.Form):
     firstname = forms.CharField(max_length=100)
@@ -17,6 +17,11 @@ class StayForm(forms.Form):
         qs = Device.objects.all()
         for r in qs:
             self.fields[f'device_{r.deviceid}'] = forms.ChoiceField(choices = (('Consent', True),('No consent', False)), label=r.device)
+
+        qe = Entity.objects.all()
+        for r in qe:
+            self.fields[f'entity_{r.entityid}'] = forms.ChoiceField(choices = (('Consent', True),('No consent', False)), label=r.entity)
+    
     # normal fields here ...
     email = forms.ModelChoiceField(queryset=User.objects.all(), to_field_name="email", empty_label=None)
     datein = forms.DateField()
