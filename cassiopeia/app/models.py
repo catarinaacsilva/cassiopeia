@@ -50,5 +50,13 @@ class Consent_Entity(models.Model):
 
 class Receipt(models.Model):
     json_receipt = JSONField()
-    timestamp = models.DateTimeField(auto_now_add = True)
+    timestamp_stored = models.DateTimeField(auto_now_add = True)
+    timestamp_created = models.DateTimeField()
     stayid = models.ForeignKey(Stay, on_delete=models.CASCADE)
+
+class Stay_Receipt(models.Model):
+    stayid = models.ForeignKey(Stay, on_delete=models.CASCADE)
+    receiptid = models.UUIDField()
+
+    class Meta:
+        unique_together = (('stayid', 'receiptid'),)

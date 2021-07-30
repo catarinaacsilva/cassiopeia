@@ -1,6 +1,7 @@
 import json
 import logging
 import requests
+from datetime import datetime
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
@@ -8,8 +9,10 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 
 from django.conf import settings
-from .models import User, Policy, Device, Stay, Entity, Consent_Entity, Consent_Device
+from .models import User, Policy, Device, Stay, Entity, Consent_Entity, Consent_Device, Receipt, Stay_Receipt
 from .forms import PolicyForm, DeviceForm, UserForm, StayForm, EntityForm 
+
+
 
 
 logger = logging.getLogger(__name__)
@@ -134,10 +137,23 @@ def listUsers(request):
 
 
 '''
-    Ask for the consent and give it
+    List temporary receipts - receipts to sign
 '''
-def formGiveConsent(request):
-    return render(request, 'giveConsent.html')
+def listReceipts(request):
+    receipts = []
+    
+    receipt_object = Receipt.objects.all()
+    for r in receipt_object:
+        ri = {
+            'receipt': json.dumps(r.json_receipt), 
+            'timestampStored': r.timestamp_stored, 
+            'timestampCreated': r.timestamp_created,
+            'stayId': r.stayid,
+            'pk': r.id
+            }
+        receipts.append(ri)
+        
+    return render(request, 'listReceipts.html', {'Receipts': receipts}) 
 
 
 
@@ -180,7 +196,7 @@ def registerStay(request):
     entity_pk = [x[7:] for x in parameters.keys() if x.startswith('entity_')]
 
 
-    version = '1.0'
+    version = 1
     language = 'EN'
     selfservicepoint = 'cassiopeia.id'
     userid = email
@@ -196,11 +212,13 @@ def registerStay(request):
             device = Device.objects.get(deviceid = pk)
             consent_d = parameters[f'device_{pk}'] == 'True'
             Consent_Device.objects.create(stayid=stay, deviceid=device, consent=consent_d)
+            devices.append({'ID': pk, 'Policy': device.policyid.pk, 'Consent': consent_d})
         
         for pk in entity_pk:
             entity = Entity.objects.get(entityid = pk)
             consent_e = parameters[f'entity_{pk}'] == 'True'
             Consent_Entity.objects.create(stayid=stay, entityid=entity, consent=consent_e)
+            entities.append({'ID': pk, 'Policy': entity.policyid.pk, 'Consent': consent_e})
     
 
         url = settings.RECEIPTGENERATION
@@ -209,13 +227,20 @@ def registerStay(request):
             'language':language, 
             'selfservicepoint':selfservicepoint,
             'userid':userid,
-            'privacyid':privacyid,
+            #'privacyid':privacyid,
             'devices':devices,
             'entities':entities,
             'otherinfo':otherinfo}
-        x = requests.get(url, data=r)
+        x = requests.get(url, json=r)
 
-        print(x)
+        result = json.loads(x.text)
+
+        receipt = result['receipt']
+        timestamp = result['timestamp']
+
+        dt_object = datetime.fromtimestamp(timestamp)
+
+        Receipt.objects.create(timestamp_created=dt_object, json_receipt=receipt, stayid=stay)
 
         #url = settings.DATA_RETENTION_STAY
         #user = {'datein':datein, 'dateout':dateout, 'email':email}
@@ -226,6 +251,8 @@ def registerStay(request):
         return Response('Cannot create the stay record', status=status.HTTP_400_BAD_REQUEST)
 
     return Response(status=status.HTTP_201_CREATED)
+
+
 
 
 '''
@@ -291,11 +318,43 @@ def addEntity(request):
 
 
 
+'''
+    Receive a signed receipt
+'''
+@csrf_exempt
+@api_view(('POST',))
+def signReceipt(request):
+    parameters = json.loads(request.body)
+    print(parameters)
+    idreceipt = parameters['id']
+    receipt = parameters['receipt']
 
-    
+    try:
+        stayid = Receipt.objects.get(id=idreceipt).stayid
 
+        url = settings.RECEIPTSTORE
+        r = {
+            'json_receipt':receipt, 
+            'email': receipt['userid']
+            }
+        x = requests.post(url, json=r)
 
+        if x.status_code != 200:
+            raise Exception('RM failed')
 
+        result = json.loads(x.text)
+        print(result)
+        
+        # Delete temporary receipt
+        Receipt.objects.filter(id=idreceipt).delete()
+
+        # Store receipt reference
+        Stay_Receipt.objects.create(stayid=stayid, receiptid=result['id_receipt'])
+
+    except Exception as e:
+        print(e)
+        return Response('ERROR', status=status.HTTP_400_BAD_REQUEST)
+    return Response(status=status.HTTP_201_CREATED)
 
 
 

@@ -11,7 +11,7 @@
 	<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800" rel="stylesheet" />
 	<link href="{% static "/css/defaulttest.css"%}" rel="stylesheet">
 	<link href="{% static "/css/fonts.css"%}" rel="stylesheet">
-
+	<script src="{% static "/js/sign.js"%}"></script>
 
 </head>
 
@@ -30,10 +30,14 @@
 	<div id="banner-wrapper">
 		<div id="banner" class="container">
 			{% block content %}
-			{% for entity in Entities %}
-				<p><b>ID:</b> {{ entity.id }}</p>
-				<p><b>Name:</b> {{ entity.name }}</p>
-				<p><b>Policy:</b> {{ entity.policy }}</p>
+			
+			{% for receipt in Receipts %}
+				<p><b>Receipt</b> <div id={{ receipt.pk }}>{{ receipt.receipt }}</div></p>
+				<p><b>Timestamp Stored:</b> {{ receipt.timestampStored }}</p>
+				<p><b>Timestamp Created:</b> {{ receipt.timestampCreated }}</p>
+                <p><b>Stay ID</b> {{ receipt.stayId }}</p>
+				<button onclick="handleSign({{receipt.pk}})">Sign</button>
+				
 			  {%endfor%}
 			{% endblock %}
 		</div>

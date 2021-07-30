@@ -240,6 +240,8 @@
 		text-transform: uppercase;
 		font-weight: 600;
 		color: #FFF;
+		width: 150px;
+		text-align: center; 
 	}
 
 		.button:hover
@@ -527,4 +529,3 @@
 	{
 		font-size: 1.8em;
 	}
-
