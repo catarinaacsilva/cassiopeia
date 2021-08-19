@@ -11,8 +11,7 @@
 	<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800" rel="stylesheet" />
 	<link href="{% static "/css/defaulttest.css"%}" rel="stylesheet">
 	<link href="{% static "/css/fonts.css"%}" rel="stylesheet">
-
-
+	
 </head>
 
 <body>
@@ -32,6 +31,7 @@
 			<div class="box-left">
 				<h2>Register stay</h2>
 				<form action="../addstay" method="post">
+					<input id="redirect" type="hidden" value="..">
 					{% csrf_token %}
 					{{ form }}
 					<input type="submit" value="Submit">
