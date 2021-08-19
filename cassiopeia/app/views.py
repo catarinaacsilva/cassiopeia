@@ -1,6 +1,7 @@
 import json
 import logging
 import requests
+import uuid
 from datetime import datetime
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -148,7 +149,7 @@ def listReceipts(request):
             'receipt': json.dumps(r.json_receipt), 
             'timestampStored': r.timestamp_stored, 
             'timestampCreated': r.timestamp_created,
-            'stayId': r.stayid,
+            'stayId': r.stayid.pk,
             'pk': r.id
             }
         receipts.append(ri)
@@ -156,10 +157,31 @@ def listReceipts(request):
     return render(request, 'listReceipts.html', {'Receipts': receipts}) 
 
 
+'''
+    List signed receipts
+'''
+def listSReceipts(request):
+    receipts = []
 
-''' ##########################################################################
+    url = settings.RECEIPTGET
+    r = {'email': 'c.alexandracorreia@ua.pt'}
+    x = requests.get(url, params=r)
+
+    receipt_object = json.loads(x.text)['receipts']
+    
+    for r in receipt_object:
+        rid = uuid.UUID(r['json_receipt']['Receipt ID'])
+        print(rid)
+        stayid = Stay_Receipt.objects.filter(receiptid=rid)[0].stayid
+        ri = {'receipt': json.dumps(r['json_receipt']), 'timestamp': r['timestamp'], 'stayId': stayid.pk}
+        receipts.append(ri)
+      
+    return render(request, 'listSReceipts.html', {'Receipts': receipts}) 
+
+
+'''##########################################################################
         API
-##########################################################################  '''
+##########################################################################'''
 '''
     Register temporary user in the system and post data on data retention
 '''
@@ -335,7 +357,7 @@ def signReceipt(request):
         url = settings.RECEIPTSTORE
         r = {
             'json_receipt':receipt, 
-            'email': receipt['userid']
+            'email': receipt['userid'],
             }
         x = requests.post(url, json=r)
 

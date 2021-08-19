@@ -144,6 +144,7 @@ APPEND_SLASH = False
 
 RECEIPTGENERATION = 'http://127.0.0.1:8001/receiptGenerator'
 RECEIPTSTORE = 'http://127.0.0.1:8001/storeReceipt'
+RECEIPTGET = 'http://127.0.0.1:8001/getReceipt' 
 
 DATA_RETENTION_STAY = 'http://127.0.0.1:8002/stayData'
 DATA_RETENTION_CONSENT = 'http://127.0.0.1:8002/consent'

@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^int/listEntities', views.listEntities, name='listEntities'),
     url(r'^int/listUsers', views.listUsers, name='listUsers'),
     url(r'^int/listReceipts', views.listReceipts, name='listReceipts'),
+    url(r'^int/listSReceipts', views.listSReceipts, name='listSReceipts'),
     
     url(r'^register_user', views.registerUser, name='registerUser'),
     url(r'^adddevice', views.addDevice, name='addDevice'),
