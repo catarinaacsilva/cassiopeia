@@ -387,7 +387,7 @@ def signReceipt(request):
             }
         x = requests.post(url, json=r)
 
-        if x.status_code != 200:
+        if int(x.status_code/100) != 2:
             raise Exception('RM failed')
 
         result = json.loads(x.text)
@@ -398,6 +398,20 @@ def signReceipt(request):
 
         # Store receipt reference
         Stay_Receipt.objects.create(stayid=stayid, receiptid=result['id_receipt'])
+
+        # Store stay in data manager
+
+        url = settings.DATA_RETENTION_STAY
+        r = {
+            'datein': stayid.datein.strftime('%Y-%m-%d %H:%M:%S'), 
+            'dateout': stayid.dateout.strftime('%Y-%m-%d %H:%M:%S'),
+            'email': stayid.email.email,
+            'receipt_id': result['id_receipt']
+            }
+        x = requests.post(url, json=r)
+
+        if int(x.status_code/100) != 2:
+            raise Exception('RM failed')
 
     except Exception as e:
         print(e)
