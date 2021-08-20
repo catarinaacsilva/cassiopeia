@@ -30,18 +30,25 @@
 	<div id="banner-wrapper">
 		<div id="banner" class="container">
 			{% block content %}
-			
-			{% for receipt in Receipts %}
+			<form method="get">
+				<label>User:</label>
+                <select name="email" onchange="this.form.submit()">
+                    <option disabled selected value> -- select an option -- </option>
+                    {% for e in emails %}
+                    <option value="{{ e }}">{{ e }}</option>
+                    {%endfor%}
+            </select></form>
+			<br>
+            <p><b>User:</b> {{ email }} ({{ receipts|length }})</p>
+			{% for receipt in receipts %}
 				<p><b>Receipt</b> <div id={{ receipt.pk }}>{{ receipt.receipt }}</div></p>
 				<p><b>Timestamp Stored:</b> {{ receipt.timestampStored }}</p>
 				<p><b>Timestamp Created:</b> {{ receipt.timestampCreated }}</p>
                 <p><b>Stay ID</b> {{ receipt.stayId }}</p>
-				<button onclick="handleSign({{receipt.pk}})">Sign</button>
-				
+				<button onclick="handleSign({{ receipt.pk }})">Sign</button>
 			{%endfor%}
 			{% endblock %}
 		</div>
-		 
 	</div>
 	</body>
 	<!--<script src="{% static "/js/form.js"%}"></script>-->

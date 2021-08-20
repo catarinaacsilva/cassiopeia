@@ -141,10 +141,24 @@ def listUsers(request):
     List temporary receipts - receipts to sign
 '''
 def listReceipts(request):
+    # get email from url parameter
+    email = request.GET.get('email', None)
+
     receipts = []
+    emails = []
+
+    # get all users
+    users = User.objects.all()
+    for u in users:
+        emails.append(u.email)
     
-    receipt_object = Receipt.objects.all()
+    # get the first email for available users
+    if email is None and len(emails) > 0:
+        email = emails[0]
+    
+    receipt_object = Receipt.objects.filter(stayid__email=email)
     for r in receipt_object:
+        print(r)
         ri = {
             'receipt': json.dumps(r.json_receipt), 
             'timestampStored': r.timestamp_stored, 
@@ -153,18 +167,30 @@ def listReceipts(request):
             'pk': r.id
             }
         receipts.append(ri)
-        
-    return render(request, 'listReceipts.html', {'Receipts': receipts}) 
+    return render(request, 'listReceipts.html', {'email':email, 'emails':emails, 'receipts': receipts}) 
 
 
 '''
     List signed receipts
 '''
 def listSReceipts(request):
+    # get email from url parameter
+    email = request.GET.get('email', None)
+
     receipts = []
+    emails = []
+
+    # get all users
+    users = User.objects.all()
+    for u in users:
+        emails.append(u.email)
+    
+    # get the first email for available users
+    if email is None and len(emails) > 0:
+        email = emails[0]
 
     url = settings.RECEIPTGET
-    r = {'email': 'c.alexandracorreia@ua.pt'}
+    r = {'email': email}
     x = requests.get(url, params=r)
 
     receipt_object = json.loads(x.text)['receipts']
@@ -176,7 +202,7 @@ def listSReceipts(request):
         ri = {'receipt': json.dumps(r['json_receipt']), 'timestamp': r['timestamp'], 'stayId': stayid.pk}
         receipts.append(ri)
       
-    return render(request, 'listSReceipts.html', {'Receipts': receipts}) 
+    return render(request, 'listSReceipts.html', {'email':email, 'emails':emails, 'receipts': receipts}) 
 
 
 '''##########################################################################

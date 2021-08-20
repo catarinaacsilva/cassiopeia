@@ -10,8 +10,7 @@
 		background: #242424;
 		font-family: 'Open Sans', sans-serif;
 		font-size: 11pt;
-		font-weight: 300;
-		color: #6c6c6c
+		color: black
 	}
 	
 	
@@ -110,7 +109,7 @@
 		padding: 0em 0em 0em 0em;
 		overflow: hidden;
 		list-style: none;
-		color: #6c6c6c
+		color: black
 	}
 	
 	ul.style1 li
@@ -296,7 +295,7 @@
 	#header
 	{
 		position: relative;
-		height: 150px;
+		height: 120px;
 	}
 
 /*********************************************************************************/
@@ -399,7 +398,7 @@
 		margin: 0em;
 		padding: 0em;
 		font-weight: 400;
-		font-size: 3em;
+		font-size: 2em;
 		color: #3E454C;
 	}
 	
@@ -480,7 +479,7 @@
 
 	#featured
 	{
-		height: 30em;
+		height: 20em;
 		background-image: url(../images/banner.jpg);
 		background-position: center;
 		background-size: cover;

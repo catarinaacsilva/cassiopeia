@@ -78,7 +78,18 @@
     <div id="banner-wrapper">
         <div id="banner" class="container">
             {% block content %}
-            {% for receipt in Receipts %}
+            <form method="get">
+                <label>User:</label>
+                <select name="email" onchange="this.form.submit()">
+                    <option disabled selected value> -- select an option -- </option>
+                    {% for e in emails %}
+                    <option value="{{ e }}">{{ e }}</option>
+                    {%endfor%}
+                </select>
+			</form>
+            <br>
+            <p><b>User:</b> {{ email }} ({{ receipts|length }})</p>
+            {% for receipt in receipts %}
             <p><b>Receipt</b>
             <div id={{ forloop.counter }}>{{ receipt.receipt }}</div>
             </p>
