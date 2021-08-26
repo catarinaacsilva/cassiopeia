@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^int/listUsers', views.listUsers, name='listUsers'),
     url(r'^int/listReceipts', views.listReceipts, name='listReceipts'),
     url(r'^int/listSReceipts', views.listSReceipts, name='listSReceipts'),
+    url(r'^int/notifications', views.notifications, name='notifications'),
     
     url(r'^register_user', views.registerUser, name='registerUser'),
     url(r'^adddevice', views.addDevice, name='addDevice'),
@@ -40,5 +41,7 @@ urlpatterns = [
     url(r'^addpolicy', views.addPolicy, name='addPolicy'),
     url(r'^adduser', views.registerUser, name='registerUser'),
     url(r'^addstay', views.registerStay, name='registerStay'), 
-    url(r'^sign', views.signReceipt, name='signReceipt'), 
+    url(r'^sign', views.signReceipt, name='signReceipt'),
+    url(r'^requestDeletion', views.requestDeletion, name='requestDeletion'),
+    url(r'^confirmDeletion', views.confirmDeletion, name='confirmDeletion'),
 ]

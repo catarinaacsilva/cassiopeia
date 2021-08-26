@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+
+{% load static %}
+{% load i18n %}
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Privacy Manager</title>
+	<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800" rel="stylesheet" />
+	<link href="{% static "/css/defaulttest.css"%}" rel="stylesheet">
+	<link href="{% static "/css/fonts.css"%}" rel="stylesheet">
+	<link rel="shortcut icon" href="{%  static '/images/favicon.ico' %}">
+    <script src="{% static "/js/data.js"%}"></script>
+    <style>
+        .alert {
+            padding: 20px;
+            background-color: #f44336;
+            color: white;
+            opacity: 1;
+            transition: opacity 0.6s;
+            margin-bottom: 15px;
+        }
+
+        .alert.success {
+            background-color: #04AA6D;
+        }
+
+        .alert.info {
+            background-color: #2196F3;
+        }
+
+        .alert.warning {
+            background-color: #ff9800;
+        }
+
+        .closebtn {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .closebtn:hover {
+            color: black;
+        }
+
+        .buttons {
+            width: 200px;
+            margin: 0 auto;
+            display: inline;
+        }
+
+        .action_btn {
+            width: 200px;
+            margin: 0 auto;
+            display: inline;
+        }
+    </style>
+</head>
+
+<body>
+	<div id="header-wrapper">
+		<div id="header" class="container">
+			<div id="logo">
+				<h1><a href="/">Privacy Manager</a></h1>
+			</div>
+			<div id="menu">
+				
+			</div>
+		</div>
+	</div>
+	<div id="featured">&nbsp;</div>
+	<div id="banner-wrapper">
+		<div id="banner" class="container">
+			{% block content %}
+			<p><b>Notifications ({{ requests|length }}):</b></p>
+            {% for r in requests %}
+            <p><b>Email</b> {{ r.email }}</p>
+            <p><b>Stay ID</b> {{ r.id }}</p>
+            <p><b>Check In</b> {{ r.datein }}</p>
+            <p><b>Check Out</b> {{ r.dateout }}</p>
+            <div class="action_btn">
+            <button class="action_btn submit" onclick="handleDeletion({{ r.id }}, false)">Confirm</button>
+            <button class="action_btn submit" onclick="handleDeletion({{ r.id }}, true)">Anonymize</button>
+            </div>
+            <hr>
+            <br>
+  			{%endfor%}
+			{% endblock %}
+		</div>
+		 
+	</div>
+	</body>
+	<!--<script src="{% static "/js/form.js"%}"></script>-->
+</html>

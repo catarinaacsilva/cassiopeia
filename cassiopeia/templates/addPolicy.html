@@ -11,7 +11,7 @@
 	<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800" rel="stylesheet" />
 	<link href="{% static "/css/defaulttest.css"%}" rel="stylesheet">
 	<link href="{% static "/css/fonts.css"%}" rel="stylesheet">
-	
+	<link rel="shortcut icon" href="{%  static '/images/favicon.ico' %}">
 </head>
 
 <body>
@@ -31,6 +31,7 @@
 			<div class="box-left">
 				<h2>Add policy</h2>
 				<form action="../addpolicy" method="post">
+					<input id="redirect" type="hidden" value="..">
 					{% csrf_token %}
 					{{ form }}
 					<input type="submit" value="Submit">

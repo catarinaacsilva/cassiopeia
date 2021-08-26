@@ -10,7 +10,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 
 from django.conf import settings
-from .models import User, Policy, Device, Stay, Entity, Consent_Entity, Consent_Device, Receipt, Stay_Receipt
+from .models import User, Policy, Device, Stay, Entity, Consent_Entity, Consent_Device, Receipt, Stay_Receipt, State
 from .forms import PolicyForm, DeviceForm, UserForm, StayForm, EntityForm 
 
 
@@ -105,8 +105,6 @@ def listDevices(request):
         
     return render(request, 'listDevices.html', {'Devices': devices})
 
-
-
 '''
     List all entity
 '''
@@ -189,20 +187,25 @@ def listSReceipts(request):
     if email is None and len(emails) > 0:
         email = emails[0]
 
-    url = settings.RECEIPTGET
-    r = {'email': email}
-    x = requests.get(url, params=r)
-
-    receipt_object = json.loads(x.text)['receipts']
-    
-    for r in receipt_object:
-        rid = uuid.UUID(r['json_receipt']['Receipt ID'])
-        print(rid)
-        stayid = Stay_Receipt.objects.filter(receiptid=rid)[0].stayid
-        ri = {'receipt': json.dumps(r['json_receipt']), 'timestamp': r['timestamp'], 'stayId': stayid.pk}
+    qs = Stay_Receipt.objects.filter(stayid__email=email)
+    for stay in qs:
+        url = settings.RECEIPTGET
+        p = {'email': email, 'receiptid': stay.receiptid}
+        x = requests.get(url, params=p)
+        receipt_object = json.loads(x.text)['receipt']
+        ri = {'receipt': json.dumps(receipt_object), 'datein': stay.stayid.datein, 'dateout': stay.stayid.dateout, 'stayId': stay.pk}
         receipts.append(ri)
       
     return render(request, 'listSReceipts.html', {'email':email, 'emails':emails, 'receipts': receipts}) 
+
+
+def notifications(request):
+    requests = []
+    qs = Stay.objects.filter(state=State.re)
+    for stay in qs:
+        requests.append({'id':stay.pk, 'email':stay.email, 'datein': stay.datein, 'dateout': stay.dateout})
+    print(requests)
+    return render(request, 'notifications.html', {'requests':requests})
 
 
 '''##########################################################################
@@ -218,15 +221,11 @@ def registerUser(request):
     firstname = parameters['firstname']
     lastname = parameters['lastname']
     email = parameters['email']
-    #datein = parameters['datein']
-    #dateout = parameters['dateout']
 
     try:
         User.objects.create(email=email, firstname=firstname, lastname=lastname)
-        #url = settings.DATA_RETENTION_STAY
-        #user = {'datein':datein, 'dateout':dateout, 'email':email}
-        #x = requests.post(url, data=user)
-    except:
+    except Exception as e:
+        print(e)
         return Response('Cannot create the user record', status=status.HTTP_400_BAD_REQUEST)
 
     return Response(status=status.HTTP_201_CREATED)
@@ -393,25 +392,25 @@ def signReceipt(request):
         result = json.loads(x.text)
         print(result)
         
-        # Delete temporary receipt
-        Receipt.objects.filter(id=idreceipt).delete()
-
-        # Store receipt reference
-        Stay_Receipt.objects.create(stayid=stayid, receiptid=result['id_receipt'])
-
         # Store stay in data manager
-
         url = settings.DATA_RETENTION_STAY
         r = {
             'datein': stayid.datein.strftime('%Y-%m-%d %H:%M:%S'), 
             'dateout': stayid.dateout.strftime('%Y-%m-%d %H:%M:%S'),
             'email': stayid.email.email,
-            'receipt_id': result['id_receipt']
+            'receipt_id': result['id_receipt'],
+            'data_conn': settings.DATA_CONN
             }
         x = requests.post(url, json=r)
 
         if int(x.status_code/100) != 2:
             raise Exception('RM failed')
+        
+        # Delete temporary receipt
+        Receipt.objects.filter(id=idreceipt).delete()
+
+        # Store receipt reference
+        Stay_Receipt.objects.create(stayid=stayid, receiptid=result['id_receipt'])
 
     except Exception as e:
         print(e)
@@ -419,6 +418,58 @@ def signReceipt(request):
     return Response(status=status.HTTP_201_CREATED)
 
 
+@csrf_exempt
+@api_view(('DELETE',))
+def requestDeletion(request):
+    try:
+        receiptid = request.GET['receiptid']
+
+        # get the stay
+        qs = Stay_Receipt.objects.filter(receiptid=receiptid)
+        if qs.exists():
+            stay = qs.first()
+            stay.stayid.state = State.re
+            stay.stayid.save()
+        else:
+            raise Exception('Stay does not exist')
+
+    except Exception as e:
+        print(e) 
+        return Response(f'Exception: {e}\n', status=status.HTTP_400_BAD_REQUEST)
+    return Response('Deletion Requested', status=status.HTTP_200_OK)
 
 
+@csrf_exempt
+@api_view(('DELETE',))
+def confirmDeletion(request):
+    print('F()')
+    try:
+        stayid = request.GET['stayid']
+        anonymize = bool(request.GET['anonymize'])
+        print(f'{stayid} {anonymize}')
 
+        # get receipt_id
+        qs = Stay_Receipt.objects.filter(stayid=stayid)
+        if qs.exists():
+            stay = qs.first()
+            rid = stay.receiptid
+
+            # Confirm Data Deletion
+            url = settings.DATA_DELETE
+            r = {'receiptid': rid, 'anonymize':anonymize}
+            x = requests.delete(url, params=r)
+
+            if int(x.status_code/100) != 2:
+                raise Exception('DM failed')
+            else:
+                #TODO: store summary if necessary
+                print(x.text)
+                stay.stayid.state = State.de
+                stay.stayid.save()
+        else:
+            raise Exception('Stay does not exist')
+
+    except Exception as e:
+        print(e) 
+        return Response(f'Exception: {e}\n', status=status.HTTP_400_BAD_REQUEST)
+    return Response('Deletion Requested', status=status.HTTP_200_OK)

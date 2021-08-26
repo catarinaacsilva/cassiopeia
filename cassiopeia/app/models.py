@@ -1,5 +1,7 @@
+from enum import Enum
 from django.db import models
 from jsonfield import JSONField
+
 
 class User(models.Model):
     email = models.EmailField(unique = True, null=False, primary_key=True)
@@ -9,17 +11,30 @@ class User(models.Model):
     def __str__(self):
       return self.email
 
+
+class State(Enum):
+    av = 'Available'
+    re = 'Requested'
+    de = 'Deleted'
+
+    def __str__(self):
+        return self.value
+
+
 class Stay(models.Model):
     email = models.ForeignKey(User, on_delete=models.CASCADE)
     datein = models.DateField()
     dateout = models.DateField()
+    state = models.CharField(max_length=16, choices=[(tag, tag.value) for tag in State], default=State.av)
     
+
 class Policy(models.Model):
     policyid = models.AutoField(primary_key=True)
     policy = models.CharField(max_length=1000, null = False)
 
     def __str__(self):
       return self.policy
+
 
 class Device(models.Model):
     deviceid = models.AutoField(primary_key=True)
@@ -48,11 +63,13 @@ class Consent_Entity(models.Model):
     entityid = models.ForeignKey(Entity, on_delete=models.CASCADE)
     stayid = models.ForeignKey(Stay, on_delete=models.CASCADE)
 
+
 class Receipt(models.Model):
     json_receipt = JSONField()
     timestamp_stored = models.DateTimeField(auto_now_add = True)
     timestamp_created = models.DateTimeField()
     stayid = models.ForeignKey(Stay, on_delete=models.CASCADE)
+
 
 class Stay_Receipt(models.Model):
     stayid = models.ForeignKey(Stay, on_delete=models.CASCADE)

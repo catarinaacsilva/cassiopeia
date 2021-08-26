@@ -147,6 +147,9 @@ RECEIPTSTORE = 'http://127.0.0.1:8001/storeReceipt'
 RECEIPTGET = 'http://127.0.0.1:8001/getReceipt' 
 
 DATA_RETENTION_STAY = 'http://127.0.0.1:8002/stayData'
+DATA_DELETE = 'http://127.0.0.1:8002/deletion'
 
-
-
+INFLUXDB_URL = 'http://10.0.12.40:8086'
+INFLUXDB_TOKEN = 'admintoken123'
+INFLUXDB_ORG = 'it'
+DATA_CONN = {'type':'infux','url':INFLUXDB_URL,'token':INFLUXDB_TOKEN,'org':INFLUXDB_ORG}
